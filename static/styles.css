@@ -1,0 +1,95 @@
+body {
+    font-family: 'Space Grotesk', sans-serif;
+	color: #173F4B;
+    background-color: #F5E0CB;
+}
+
+#content {
+	padding: 20px;
+}
+
+.article-text {
+	padding: 10px;
+	color: #173F4B;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+h4, h5 {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.card {
+	margin: 10px;
+	border-color: #755637;
+	border-width: 4px;
+}
+
+.form-label, .form-check-label {
+	color: #173F4B;
+}
+
+.card-header, .card-footer {
+	background-color: #DAEEF5;
+	color: #173F4B;
+}
+
+#cartbtn, #price, .btn-group {
+	float: right;
+}
+
+.btn-primary {
+	background-color: #6692A0;
+}
+
+#ratingcard {
+	padding: 5px;
+	float: right;
+}
+
+.checked {
+	color: #B59C82;
+}
+
+.navbar {
+    background-color: #B59C82;
+    width: 100%;
+}
+
+.nav-item {
+    margin-left: 10px;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.nav-item a {
+    color: #755637;
+	font-size: xx-large;
+}
+
+.nav-item:hover a {
+    color: #F5E0CB;
+}
+
+.nav-item:enabled {
+    color: #173F4B;
+}
+
+.input-group {
+	justify-content: center;
+}
+
+.total {
+	padding: 20px;
+	float: right;
+}
+
+#detailed {
+	color: #173F4B;
+}
+
+#detailed:hover {
+	color: #755637;
+}
