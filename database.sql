@@ -7,7 +7,12 @@ USE woohoo;
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `username` VARCHAR(255) NOT NULL CHARACTER SET utf8,
+    `name` VARCHAR(255) NOT NULL CHARACTER SET utf8,
+    `surname` VARCHAR(255) NOT NULL CHARACTER SET utf8,
+    `address` VARCHAR(255) CHARACTER SET utf8,
+    `addressNumber` VARCHAR(100) CHARACTER SET utf8,
+    `postalCode` VARCHAR(20) CHARACTER SET utf8,
+    `email` VARCHAR(255) NOT NULL CHARACTER SET utf8,
     `hash` VARCHAR(255) NOT NULL,
     `salt` VARCHAR(255) NOT NULL,
     `role` ENUM('Admin', 'Seller', 'Customer') NOT NULL
@@ -50,11 +55,11 @@ CREATE TABLE `ordersArticles` (
 );
 
 -- vnosi v tabelo
-INSERT INTO `users` (`username`, `hash`, `salt`, `role`) VALUES ('NubNub', '1', '1', 'Admin');
-INSERT INTO `users` (`username`, `hash`, `salt`, `role`) VALUES ('Johny', '2', '2', 'Seller');
-INSERT INTO `users` (`username`, `hash`, `salt`, `role`) VALUES ('Thomas Shelby', '3', '3', 'Seller');
-INSERT INTO `users` (`username`, `hash`, `salt`, `role`) VALUES ('Beatle Lover', '4', '4', 'Customer');
-INSERT INTO `users` (`username`, `hash`, `salt`, `role`) VALUES ('Tim', '5', '5', 'Customer');
+INSERT INTO `users` (`name`, `surname`, `address`, `addressNumber`, `postalCode`, `hash`, `salt`, `role`) VALUES ('Jakob', 'Kadivec', NULL, NULL, NULL, '1', '1', 'Admin');
+INSERT INTO `users` (`name`, `surname`, `address`, `addressNumber`, `postalCode`, `hash`, `salt`, `role`) VALUES ('Mimi', 'Hrastnik', NULL, NULL, NULL, '2', '2', 'Seller');
+INSERT INTO `users` (`name`, `surname`, `address`, `addressNumber`, `postalCode`, `hash`, `salt`, `role`) VALUES ('Lojze', 'Pustišek', NULL, NULL, NULL, '3', '3', 'Seller');
+INSERT INTO `users` (`name`, `surname`, `address`, `addressNumber`, `postalCode`, `hash`, `salt`, `role`) VALUES ('Janko', 'Novak', 'Dvor', '3', '1355', '4', '4', 'Customer');
+INSERT INTO `users` (`name`, `surname`, `address`, `addressNumber`, `postalCode`, `hash`, `salt`, `role`) VALUES ('Tim', 'Gorbačov', 'Čargova ulica, Kanal', '2a', '5210', '5', '5', 'Customer');
 
 INSERT INTO `articles` (`name`, `description`, `artist`, `releaseYear`, `rating`, `numberOfRatings`, `price`, `idSeller`) VALUES ('I Want To Hold Your Hand', 'With a million preorders for “I Want To Hold Your Hand” in the UK, the single shot to number 1 in December 1963 knocking The Beatles’ own “She Loves You” from the top spot.  This was to be the first official single for The Beatles on Capitol records and was backed by an extraordinary marketing campaign.', 'The Beatles', '1963', '0.0', '0', '16.99', '2')
 INSERT INTO `articles` (`name`, `description`, `artist`, `releaseYear`, `rating`, `numberOfRatings`, `price`, `idSeller`) VALUES ('Unreal Unearth', 'Unreal Unearth is the incredible third album by Hozier. The peerless singer-songwriter recorded this remarkable record with a stellar cast of producers including Bekon (Kendrick Lamar, Drake), Jennifer Decilveo (Miley Cyrus, Bat For Lashes), and Jeff Gitelman (The Weeknd, H.E.R.). The sounds, style and influences throughout the record range from folk, to rock, to blues, to soul, to anthemic pop, and all that’s in between.', 'Hozier', '2024', '0.0', '0', '45.99', '3')
