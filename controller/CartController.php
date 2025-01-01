@@ -35,7 +35,7 @@ class CartController {
     }
 
     public static function index() {
-        echo ViewHelper::renderJSON(['cart' => $_SESSION['cart']]);
+        echo ViewHelper::render("view/cart.php", ['cart' => $_SESSION['cart']]);
     }
 
     public static function delete($id) {

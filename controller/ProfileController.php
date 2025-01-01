@@ -5,11 +5,7 @@ require_once("ViewHelper.php");
 
 class ProfileController {
 	public static function get($id) {
-		try {
-			echo ViewHelper::renderJSON(WooHooDB::getProfile(["id" => $id]));
-		} catch (InvalidArgumentException $e) {
-			echo ViewHelper::renderJSON($e->getMessage(), 404);
-		}
+		echo ViewHelper::render("view/profile.php", WooHooDB::getProfile(["id" => $id]));
 	}
 
 	public static function index() {
@@ -21,35 +17,22 @@ class ProfileController {
 
 		if (self::checkValues($data)) {
 			$id = WooHooDB::insertProfile($data);
-			echo ViewHelper::renderJSON("", 201);
-			ViewHelper::redirect(BASE_URL . "api/profile/$id");
-		} else {
-			echo ViewHelper::renderJSON("Missing data.",400);
+			ViewHelper::redirect(BASE_URL . "profile/" . $id);
 		}
 	}
 
 	public static function edit($id) {
-		$_PUT = [];
-		parse_str(file_get_contents("php://input"), $_PUT);
-		$data = filter_var_array($_PUT, self::getRules());
+		$data = filter_input_array(INPUT_POST, self::getRules());
 
 		if (self::checkValues($data)) {
 			$data["id"] = $id;
 			WooHooDB::updateProfile($data);
-			echo ViewHelper::renderJSON("",200);
-		} else {
-			echo ViewHelper::renderJSON("Missing data.",400);
+			ViewHelper::redirect(BASE_URL . "profile/" . $id);
 		}
 	}
 
 	public static function delete($id) {
-		try {
-			WooHooDB::getProfile(["id" => $id]);
-			WooHooDB::deleteProfile(["id"=> $id]);
-			echo ViewHelper::renderJSON("", 204);
-		} catch (InvalidArgumentException $e) {
-			echo ViewHelper::renderJSON("User with $id doesn't exist.", 404);
-		}
+		
 	}
 
 	public static function checkValues($input) {

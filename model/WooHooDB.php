@@ -77,16 +77,11 @@ class WooHooDB extends AbstractDB {
 		}
 	}
 
-	public static function getAllRecords(array $prefix) {
-		return parent::query("SELECT id, name, artist, price, CONCAT(:prefix, id) as uri FROM articles", $prefix);
+	public static function getAllRecords() {
+		return parent::query("SELECT id, name, artist, price FROM articles");
 	}
 
-	public static function getAllOrders($userId, $prefix) {
-		$params = [
-			':idCustomer' => $userId,
-			':prefix' => $prefix
-		];
-
-		return parent::query("SELECT id, status, idSeller CONCAT(:prefix, id) as uri FROM articles WHERE idCustomer = :idCustomer", $params);
+	public static function getAllOrders($userId) {
+		return parent::query("SELECT id, status FROM articles WHERE idCustomer = :idCustomer", $userId);
 	}
 }

@@ -5,26 +5,11 @@ require_once("ViewHelper.php");
 
 class OrdersController {
 	public static function get($id) {
-		try {
-			echo ViewHelper::renderJSON(WooHooDB::getOrder(["id" => $id]));
-		} catch (InvalidArgumentException $e) {
-			echo ViewHelper::renderJSON($e->getMessage(), 404);
-		}
+		echo ViewHelper::render("", WooHooDB::getOrder(["id" => $id]));
 	}
 
 	public static function index($userId) {
-		$prefix = $_SERVER["REQUEST_SCHEME"] . "://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-
-		if (!str_ends_with($prefix, "/")) {
-			$prefix .= "/";
-		}
-
-		try {
-			$orders = WooHooDB::getAllOrders($userId, $prefix);
-			echo ViewHelper::renderJSON($orders);
-		} catch (Exception $e) {
-			echo ViewHelper::renderJSON(["error" => $e->getMessage()], 500);
-		}
+		echo ViewHelper::render("view/orders.php", ["orders" => WooHooDB::getAllOrders($userId)]);
 	}
 
 	public static function add() {
@@ -54,21 +39,19 @@ class OrdersController {
 
 			unset($_SESSION['cart']);
 	
-			echo ViewHelper::renderJSON(["orderIds" => $orderIds], 201);
+			echo ViewHelper::redirect(BASE_URL . 'orders/' . $idCustomer);
 		} catch (Exception $e) {
 			echo ViewHelper::renderJSON("An error occurred: " . $e->getMessage(), 500);
 		}
 	}
 
 	public static function edit($id) {
-		$_PUT = [];
-		parse_str(file_get_contents("php://input"), $_PUT);
-		$data = filter_var_array($_PUT, self::getRules());
+		$data = filter_input_array(INPUT_POST, self::getRules());
 
 		if (self::checkValues($data)) {
 			$data["id"] = $id;
 			WooHooDB::updateOrder($data);
-			echo ViewHelper::renderJSON("",200);
+			echo ViewHelper::redirect(BASE_URL . 'orders/' . $_SESSION['user_id']);
 		} else {
 			echo ViewHelper::renderJSON("Missing data.",400);
 		}

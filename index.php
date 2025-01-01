@@ -11,22 +11,22 @@ define("CSS_URL", rtrim($_SERVER["SCRIPT_NAME"], "index.php") . "static/");
 $path = isset($_SERVER["PATH_INFO"]) ? trim($_SERVER["PATH_INFO"], "/") : "";
 
 $urls = [
-	"/^api\/records$/"=> function ($method) {
-		switch ($method) {
-			case "POST":
-				RecordsController::add();
-				break;
-			default:
-				RecordsController::index();
-				break;
+	"/^$/"=> function () {
+		ViewHelper::redirect(BASE_URL . "records");
+	},
+	"/^records$/"=> function ($method) {
+		if ($method == "POST") {
+			RecordsController::add();
+		} else {
+			RecordsController::index();
 		}
 	},
-	"/^api\/records\/(\d+)$/" => function ($method, $id) {
+	"/^records\/(\d+)$/" => function ($method, $id) {
 		switch ($method) {
-			case "PUT":
+			case "POST":
 				RecordsController::edit($id);
 				break;
-			case "DELETE":
+			case "PUT":
 				RecordsController::delete($id);
 				break;
 			default:
@@ -34,7 +34,7 @@ $urls = [
 				break;
 		}
 	},
-	"/^api\/cart$/" => function ($method) {
+	"/^cart$/" => function ($method) {
         switch ($method) {
             case "POST":
                 CartController::add();
@@ -45,13 +45,11 @@ $urls = [
         }
     },
     "/^api\/cart\/(\d+)$/" => function ($method, $id) {
-        switch ($method) {
-            case "DELETE":
-                CartController::delete($id);
-                break;
+        if ($method == "DELETE") {
+			CartController::delete($id);
         }
     },
-	"/^api\/orders\/(\d+)$/"=> function ($method, $userId) {
+	"/^orders\/(\d+)$/"=> function ($method, $userId) {
 		switch ($method) {
 			case "POST":
 				OrdersController::add();
@@ -61,12 +59,12 @@ $urls = [
 				break;
 		}
 	},
-	"/^api\/orders\/(\d+)\/(\d+)$/" => function ($method, $userId, $id) {
+	"/^orders\/(\d+)\/(\d+)$/" => function ($method, $userId, $id) {
 		switch ($method) {
-			case "PUT":
+			case "POST":
 				OrdersController::edit($id);
 				break;
-			case "DELETE":
+			case "PUT":
 				OrdersController::delete($id);
 				break;
 			default:
@@ -74,7 +72,7 @@ $urls = [
 				break;
 		}
 	},
-	"/^api\/profile$/"=> function ($method) {
+	"/^profile$/"=> function ($method) {
 		switch ($method) {
 			case "POST":
 				ProfileController::add();
@@ -84,12 +82,12 @@ $urls = [
 				break;
 		}
 	},
-	"/^api\/profile\/(\d+)$/" => function ($method, $id) {
+	"/^profile\/(\d+)$/" => function ($method, $id) {
 		switch ($method) {
-			case "PUT":
+			case "POST":
 				ProfileController::edit($id);
 				break;
-			case "DELETE":
+			case "PUT":
 				ProfileController::delete($id);
 				break;
 			default:
@@ -97,10 +95,10 @@ $urls = [
 				break;
 		}
 	},
-        "/^.*$/" => function () {
-            echo "Unmatched path: " . $_SERVER["REQUEST_URI"];
-            exit;
-        }
+	"/^.*$/" => function () {
+		echo "Unmatched path: " . $_SERVER["REQUEST_URI"];
+		exit;
+	}
 ];
 
 foreach ($urls as $pattern => $controller) {
