@@ -1,6 +1,6 @@
 <?php
 
-require_once("WooHooDB.php");
+require_once("model/WooHooDB.php");
 require_once("ViewHelper.php");
 
 class OrdersController {

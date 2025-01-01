@@ -6,7 +6,7 @@ require_once("controller/OrdersController.php");
 require_once("controller/ProfileController.php");
 
 define("BASE_URL", rtrim($_SERVER["SCRIPT_NAME"], "index.php"));
-define("CSS_URL", rtrim($_SERVER["SCRIPT_NAME"], "index.php"));
+define("CSS_URL", rtrim($_SERVER["SCRIPT_NAME"], "index.php") . "static/");
 
 $path = isset($_SERVER["PATH_INFO"]) ? trim($_SERVER["PATH_INFO"], "/") : "";
 
@@ -97,6 +97,10 @@ $urls = [
 				break;
 		}
 	},
+        "/^.*$/" => function () {
+            echo "Unmatched path: " . $_SERVER["REQUEST_URI"];
+            exit;
+        }
 ];
 
 foreach ($urls as $pattern => $controller) {
