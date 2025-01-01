@@ -11,15 +11,44 @@ class ProfileController {
 	public static function index() {
             echo ViewHelper::render("view/login_register.php");
 	}
+        
+        public static function add() {
+            $data = filter_input_array(INPUT_POST, self::getRules());
 
-	public static function add() {
-		$data = filter_input_array(INPUT_POST, self::getRules());
+            if (self::checkValues($data)) {
+                $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
+                $salt = bin2hex(random_bytes(16));
+                $hash = password_hash($salt . $password, PASSWORD_DEFAULT);
 
-		if (self::checkValues($data)) {
-			$id = WooHooDB::insertProfile($data);
-			ViewHelper::redirect(BASE_URL . "profile/" . $id);
-		}
-	}
+                $data['hash'] = $hash;
+                $data['salt'] = $salt;
+                $data['role'] = 'Customer';
+
+                $id = WooHooDB::insertProfile($data);
+                $_SESSION['user_id'] = $id;
+                $_SESSION['role'] = $data['role'];
+                $_SESSION["cart"] = [];
+                echo ViewHelper::redirect(BASE_URL . "profile/" . $id);
+            }
+        }
+        
+        public static function changePassword($id) {
+            $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
+
+            if (!empty($password)) {
+                $salt = bin2hex(random_bytes(16));
+                $hash = password_hash($salt . $password, PASSWORD_DEFAULT);
+
+                $data = [
+                    'hash' => $hash,
+                    'salt' => $salt,
+                    'id' => $id
+                ];
+
+                WooHooDB::updatePassword($data);
+                echo ViewHelper::redirect(BASE_URL . "profile/" . $id);
+            }
+        }
 
 	public static function edit($id) {
 		$data = filter_input_array(INPUT_POST, self::getRules());
@@ -30,6 +59,35 @@ class ProfileController {
 			ViewHelper::redirect(BASE_URL . "profile/" . $id);
 		}
 	}
+        
+        public static function login() {
+            $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+            $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
+
+            $user = WooHooDB::getUserByEmail(['email' => $email]);
+
+            if ($user) {
+                $hashedPassword = $user['hash'];
+                $salt = $user['salt'];
+
+                if (password_verify($salt . $password, $hashedPassword)) {
+                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['role'] = $user['role'];
+                    $_SESSION["cart"] = [];
+
+                    echo ViewHelper::redirect(BASE_URL . "profile/" . $user['id']);
+                } else {
+                    echo ViewHelper::render("view/login_register.php", ["error" => "Invalid email or password."]);
+                }
+            } else {
+                echo ViewHelper::render("view/login_register.php", ["error" => "Invalid email or password."]);
+            }
+        }
+        
+        public static function logout() {
+            session_destroy();
+            ViewHelper::redirect(BASE_URL);
+        }
 
 	public static function delete($id) {
 		

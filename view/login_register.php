@@ -85,9 +85,9 @@
 								<input type="text" class="form-control" name="surname" value="<?= isset($surname) ? $surname : '' ?>" placeholder="Last name" required /><br>
 
 								<label class="form-label">Address</label><br>
-								<input type="text" class="form-control" name="street" value="<?= isset($address) ? $address : '' ?>" placeholder="Street name" required />
-								<input type="number" class="form-control" name="streetNo" value="<?= isset($addressNumber) ? $addressNumber : '' ?>" placeholder="House number"required />
-								<input type="number" class="form-control" name="postcode" value="<?= isset($postalCode) ? $postalCode : '' ?>" placeholder="Postcode" required /><br>
+								<input type="text" class="form-control" name="address" value="<?= isset($address) ? $address : '' ?>" placeholder="Street name" required />
+								<input type="number" class="form-control" name="addressNumber" value="<?= isset($addressNumber) ? $addressNumber : '' ?>" placeholder="House number"required />
+								<input type="number" class="form-control" name="postalCode" value="<?= isset($postalCode) ? $postalCode : '' ?>" placeholder="Postcode" required /><br>
 							</div>
 							
 							<div class="card-footer">

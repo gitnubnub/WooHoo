@@ -19,9 +19,9 @@ class WooHooDB extends AbstractDB {
 	}
 
 	public static function insertProfile(array $params) {
-		return parent::modify("INSERT INTO users (name, surname, address, addressNumber, postalCode, email, role) "
-			. "VALUES (':name', :surname, :address, :addressNumber, :postalCode, :email, :role)", $params);
-	}
+            return parent::modify("INSERT INTO users (name, surname, address, addressNumber, postalCode, email, role, hash, salt) "
+                . "VALUES (:name, :surname, :address, :addressNumber, :postalCode, :email, :role, :hash, :salt)", $params);
+        }
 
 	public static function updateRecord(array $params) {
 		return parent::modify("UPDATE articles SET name = :name, description = :description, artist = :artist, releaseYear = :releaseYear, "
@@ -33,9 +33,13 @@ class WooHooDB extends AbstractDB {
 	}
 
 	public static function updateProfile(array $params) {
-		return parent::modify("UPDATE users SET name = :name, surname = :surname, address = :address, addressNumber = :addressNumber, "
-			. "postalCode = :postalCode, email = :email WHERE id = :id", $params);
+		return parent::modify("UPDATE users SET  email = :email, name = :name, surname = :surname, address = :address, addressNumber = :addressNumber, "
+			. "postalCode = :postalCode WHERE id = :id", $params);
 	}
+        
+        public static function updatePassword(array $params) {
+            return parent::modify("UPDATE users SET hash = :hash, salt = :salt WHERE id = :id", $params);
+        }
 
 	public static function deleteRecord(array $id) {
 		return parent::modify("DELETE FROM articles WHERE id = :id", $id);
@@ -76,12 +80,30 @@ class WooHooDB extends AbstractDB {
 			throw new InvalidArgumentException("No such record");
 		}
 	}
+        
+        public static function getUserByEmail(array $params) {
+            $records = parent::query("SELECT id, hash, salt, role FROM users WHERE email = :email", $params);
+
+            if (count($records) == 1) {
+                return $records[0];
+            } else {
+                return null;
+            }
+        }
 
 	public static function getAllRecords() {
 		return parent::query("SELECT id, name, artist, price, idSeller FROM articles");
 	}
+        
+        public static function getAllRecordsFromSeller($sellerId) {
+		return parent::query("SELECT id, name, artist, price, idSeller FROM articles WHERE idSeller = :idSeller", $sellerId);
+	}
 
 	public static function getAllOrders($userId) {
-		return parent::query("SELECT id, status FROM articles WHERE idCustomer = :idCustomer", $userId);
+		return parent::query("SELECT id, status, idSeller FROM orders WHERE idCustomer = :idCustomer", ["idCustomer" => $userId]);
+	}
+        
+        public static function getAllOrdered($userId) {
+		return parent::query("SELECT id, status FROM articles WHERE idSeller = :idSeller", $userId);
 	}
 }

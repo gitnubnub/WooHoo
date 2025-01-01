@@ -47,21 +47,26 @@
 			<h1>Your orders</h1>
 			<hr class="solid">
 			
-			<?php foreach ($orders as $order): ?>
-				<div class="card">
-					<div class="article-text">
-						<h6>From: <?= $order["seller"] ?></h6>
-						<p>Status: <?= $order["status"] ?></p>
-						<p id="price">[price?]</p>
-					</div>
+                        <?php if (!empty($orders)): ?>
+                            <?php foreach ($orders as $order): ?>
+                                    <div class="card">
+                                            <div class="article-text">
+                                                    <h6>From: <?= $order["seller"] ?></h6>
+                                                    <p>Status: <?= $order["status"] ?></p>
+                                                    <p id="price">[price?]</p>
+                                            </div>
 
-					<div class="card-footer">
-						<button id="cartbtn" class="btn btn-primary">
-							View details
-						</button>
-					</div>
-				</div>
-			<?php endforeach; ?>
+                                            <div class="card-footer">
+                                                    <button id="cartbtn" class="btn btn-primary">
+                                                            View details
+                                                    </button>
+                                            </div>
+                                    </div>
+                            <?php endforeach; ?>
+                        
+                        <?php else: ?>
+				<p>You don't have any orders.</p>
+			<?php endif; ?>
 		</div>
 
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

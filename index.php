@@ -59,7 +59,11 @@ $urls = [
             }
         },
         "/^orders$/" => function () {
-            ViewHelper::redirect(BASE_URL . "profile");
+            if (isset($_SESSION['user_id'])) {
+                ViewHelper::redirect(BASE_URL . "orders/" . $_SESSION['user_id']);
+            } else {
+                ViewHelper::redirect(BASE_URL . "profile");
+            }
         },
 	"/^orders\/(\d+)$/"=> function ($method, $userId) {
 		switch ($method) {
@@ -84,16 +88,29 @@ $urls = [
 				break;
 		}
 	},
-	"/^profile$/"=> function ($method) {
+	"/^profile$/" => function ($method) {
 		switch ($method) {
 			case "POST":
 				ProfileController::add();
 				break;
 			default:
-				ProfileController::index();
+				if (isset($_SESSION['user_id'])) {
+                                    ViewHelper::redirect(BASE_URL . "profile/" . $_SESSION['user_id']);
+                                } else {
+                                    ProfileController::index();
+                                }
 				break;
 		}
 	},
+        "/^changepassword\/(\d+)$/" => function ($method, $id) {
+            ProfileController::changePassword($id);
+        },
+        "/^login$/" => function () {
+            ProfileController::login();
+        },
+        "/^logout$/" => function () {
+            ProfileController::logout();
+        },
 	"/^profile\/(\d+)$/" => function ($method, $id) {
 		switch ($method) {
 			case "POST":

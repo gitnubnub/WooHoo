@@ -9,7 +9,11 @@ class RecordsController {
 	}
 
 	public static function index() {
+            if (isset($_SESSION['role']) && isset($_SESSION['user_id']) && $_SESSION['role'] == 'Seller') {
+                echo ViewHelper::render("view/home.php", ["records" => WooHooDB::getAllRecordsFromSeller($_SESSION['user_id'])]);
+            } else {
 		echo ViewHelper::render("view/home.php", ["records" => WooHooDB::getAllRecords()]);
+            }
 	}
 
 	public static function add() {
@@ -28,7 +32,7 @@ class RecordsController {
 		if (self::checkValues($data)) {
 			$data["id"] = $id;
 			WooHooDB::updateRecord($data);
-			echo ViewHelper::redirect(BASE_URL . "records". $data["id"]);
+			echo ViewHelper::render("view/details.php", WooHooDB::getRecord(["id" => $id]));
 		}
 	}
 

@@ -48,131 +48,42 @@
 			<hr class="solid">
 			
 			<h3>E-mail</h3>
-			<p><?= $email ?>
-				<button type="button" class="btn btn-default btn-sm" data-bs-toggle="modal" data-bs-target="#editEmail">
-					<i class="fa-solid fa-pen-to-square"></i>
-				</button>
-
-				<div class="modal fade" tabindex="-1" role="form" aria-labelledby="editEmail" aria-hidden="true">
-					<div class="modal-dialog modal-dialog-centered" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5>Enter your new e-mail</h5>
-								<button type="button" class="close" data-bs-dismiss="modal" aria-label="close">
-									<span aria-hidden="true"></span>
-								</button>
-							</div>
-	
-							<form action="<?= BASE_URL . "profile/" . $id ?>" method="put">
-								<input type="hidden" name="id" value="<?= $id ?>" />
-								<div class="modal-body">
-									<p>
-										<input type="email" name="email" value="<?= $email ?>" placeholder="" required />
-									</p>
-								</div>
-		
-								<div class="modal-footer">
-									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-									<button type="submit" class="btn btn-primary">Submit</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</p>
-
-			<h3>Password</h3>
-			<p>*********
-				<button type="button" class="btn btn-default btn-sm" data-bs-toggle="modal" data-bs-target="#editPassword">
-					<i class="fa-solid fa-pen-to-square"></i>
-				</button>
-
-				<div class="modal fade" tabindex="-1" role="form" aria-labelledby="editPassword" aria-hidden="true">
-					<div class="modal-dialog modal-dialog-centered" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5>Enter your new password</h5>
-								<button type="button" class="close" data-bs-dismiss="modal" aria-label="close">
-									<span aria-hidden="true"></span>
-								</button>
-							</div>
-	
-							<form action="<?= BASE_URL . "profile/" . $id ?>" method="put">
-								<input type="hidden" name="id" value="<?= $id ?>" />
-								<div class="modal-body">
-									<p>
-										<input type="password" name="password" value="<?= $password ?>" placeholder="" required />
-									</p>
-								</div>
-		
-								<div class="modal-footer">
-									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-									<button type="submit" class="btn btn-primary">Submit</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</p>
+			<p><?= $email ?></p>
 
 			<h3>Name and surname</h3>
-			<p><?= $name ?> <?= $surname ?>
-				<button type="button" class="btn btn-default btn-sm" data-bs-toggle="modal" data-bs-target="#editName">
-					<i class="fa-solid fa-pen-to-square"></i>
-				</button>
-
-				<div class="modal fade" tabindex="-1" role="form" aria-labelledby="editName" aria-hidden="true">
-					<div class="modal-dialog modal-dialog-centered" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5>Enter your new name</h5>
-								<button type="button" class="close" data-bs-dismiss="modal" aria-label="close">
-									<span aria-hidden="true"></span>
-								</button>
-							</div>
-	
-							<form action="<?= BASE_URL . "profile/" . $id ?>" method="put">
-								<input type="hidden" name="id" value="<?= $id ?>" />
-								<div class="modal-body">
-									<p>
-										<input type="text" class="form-control" name="name" value="<?= $name ?>" placeholder="First name" required />
-										<input type="text" class="form-control" name="surname" value="<?= $surname ?>" placeholder="Last name" required />
-									</p>
-								</div>
-		
-								<div class="modal-footer">
-									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-									<button type="submit" class="btn btn-primary">Submit</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</p>
+			<p><?= $name ?> <?= $surname ?></p>
 
 			<h3>Address</h3>
-			<p><?= $address ?> <?= $addressNumber ?>, <?= $postalCode ?>
-				<button type="button" class="btn btn-default btn-sm" data-bs-toggle="modal" data-bs-target="#editAddress">
-					<i class="fa-solid fa-pen-to-square"></i>
-				</button>
-
-				<div class="modal fade" tabindex="-1" role="form" aria-labelledby="editAddress" aria-hidden="true">
+			<p><?= $address ?> <?= $addressNumber ?>, <?= $postalCode ?></p>
+                        
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editProfile">
+                            <i class="fa-solid fa-pen-to-square"></i> Edit profile
+                        </button>
+                        
+                        <div id="editProfile" class="modal fade" tabindex="-1" role="form" aria-labelledby="editProfile" aria-hidden="true">
 					<div class="modal-dialog modal-dialog-centered" role="document">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h5>Enter your new Address</h5>
+								<h5>Enter your new information</h5>
 								<button type="button" class="close" data-bs-dismiss="modal" aria-label="close">
 									<span aria-hidden="true"></span>
 								</button>
 							</div>
 	
-							<form action="<?= BASE_URL . "profile/" . $id ?>" method="put">
+							<form action="<?= BASE_URL . "profile/" . $id ?>" method="post">
 								<input type="hidden" name="id" value="<?= $id ?>" />
 								<div class="modal-body">
 									<p>
-										<input type="text" class="form-control" name="street" value="<?= $address ?>" placeholder="Street name" required />
-										<input type="number" class="form-control" name="streetNo" value="<?= $addressNumber ?>" placeholder="House number"required />
-										<input type="number" class="form-control" name="postcode" value="<?= $postalCode ?>" placeholder="Postcode" required />
+                                                                            <input type="email" name="email" value="<?= $email ?>" placeholder="" required />
+                                                                        </p>
+                                                                        <p>
+                                                                            <input type="text" class="form-control" name="name" value="<?= $name ?>" placeholder="First name" required />
+                                                                            <input type="text" class="form-control" name="surname" value="<?= $surname ?>" placeholder="Last name" required />
+                                                                        </p>
+                                                                        <p>
+                                                                            <input type="text" class="form-control" name="address" value="<?= $address ?>" placeholder="Street name" required />
+                                                                            <input type="number" class="form-control" name="addressNumber" value="<?= $addressNumber ?>" placeholder="House number"required />
+                                                                            <input type="number" class="form-control" name="postalCode" value="<?= $postalCode ?>" placeholder="Postcode" required />
 									</p>
 								</div>
 		
@@ -183,8 +94,44 @@
 							</form>
 						</div>
 					</div>
-				</div>
-			</p>
+                        </div>
+                        
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editPassword">
+				<i class="fa-solid fa-pen-to-square"></i> Change password
+			</button>
+
+                        <div id="editPassword" class="modal fade" tabindex="-1" role="form" aria-labelledby="editPassword" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                                <div class="modal-header">
+                                                        <h5>Enter your new password</h5>
+                                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="close">
+                                                                <span aria-hidden="true"></span>
+                                                        </button>
+                                                </div>
+
+                                                <form action="<?= BASE_URL . "changepassword/" . $id ?>" method="post">
+                                                        <input type="hidden" name="id" value="<?= $id ?>" />
+                                                        <div class="modal-body">
+                                                                <p>
+                                                                        <input type="password" name="password" value="<?= isset($password) ? $password : '' ?>" placeholder="" required />
+                                                                </p>
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                                        </div>
+                                                </form>
+                                        </div>
+                                </div>
+                        </div>
+                        
+                        <form action="<?= BASE_URL . "logout" ?>" method="get" >
+                            <button id="logoutbtn" type="submit" class="btn btn-primary">
+                                Log out
+                            </button>
+                        </form>
 		</div>
 
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
