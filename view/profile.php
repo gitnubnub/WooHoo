@@ -63,7 +63,7 @@
 								</button>
 							</div>
 	
-							<form action="<?= BASE_URL . "profile/edit/" . $id ?>" method="post">
+							<form action="<?= BASE_URL . "profile/" . $id ?>" method="put">
 								<input type="hidden" name="id" value="<?= $id ?>" />
 								<div class="modal-body">
 									<p>
@@ -97,7 +97,7 @@
 								</button>
 							</div>
 	
-							<form action="<?= BASE_URL . "profile/edit/" . $id ?>" method="post">
+							<form action="<?= BASE_URL . "profile/" . $id ?>" method="put">
 								<input type="hidden" name="id" value="<?= $id ?>" />
 								<div class="modal-body">
 									<p>
@@ -131,7 +131,7 @@
 								</button>
 							</div>
 	
-							<form action="<?= BASE_URL . "profile/edit/" . $id ?>" method="post">
+							<form action="<?= BASE_URL . "profile/" . $id ?>" method="put">
 								<input type="hidden" name="id" value="<?= $id ?>" />
 								<div class="modal-body">
 									<p>
@@ -166,7 +166,7 @@
 								</button>
 							</div>
 	
-							<form action="<?= BASE_URL . "profile/edit/" . $id ?>" method="post">
+							<form action="<?= BASE_URL . "profile/" . $id ?>" method="put">
 								<input type="hidden" name="id" value="<?= $id ?>" />
 								<div class="modal-body">
 									<p>

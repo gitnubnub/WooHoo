@@ -19,18 +19,44 @@ class OrdersController {
 			$prefix .= "/";
 		}
 
-		echo ViewHelper::renderJSON(WooHooDB::getAllOrders(["prefix" => $prefix]));
+		try {
+			$orders = WooHooDB::getAllOrders($userId, $prefix);
+			echo ViewHelper::renderJSON($orders);
+		} catch (Exception $e) {
+			echo ViewHelper::renderJSON(["error" => $e->getMessage()], 500);
+		}
 	}
 
 	public static function add() {
-		$data = filter_input_array(INPUT_POST, self::getRules());
+		$idCustomer = $_SESSION['user_id'];
 
-		if (self::checkValues($data)) {
-			$id = WooHooDB::insertOrder($data);
-			echo ViewHelper::renderJSON("", 201);
-			ViewHelper::redirect(BASE_URL . "api/orders/$id");
-		} else {
-			echo ViewHelper::renderJSON("Missing data.",400);
+		try {
+			$cartGroupedBySeller = [];
+			foreach ($_SESSION['cart'] as $articleId => $item) {
+				$cartGroupedBySeller[$item['idSeller']][] = ['id' => $articleId, 'name' => $item['name'], 'artist' => $item['artist'], 'price' => $item['price'], 'quantity' => $item['quantity']];
+			}
+	
+			$orderIds = [];
+			foreach ($cartGroupedBySeller as $idSeller => $articles) {
+				$orderId = WooHooDB::insertOrder([
+					"idCustomer" => $idCustomer,
+					"idSeller" => $idSeller,
+				]);
+				$orderIds[] = $orderId;
+
+				foreach ($articles as $article) {
+					WooHooDB::insertOrderArticle([
+						"idOrder" => $orderId,
+						"idArticle" => $article['id'],
+					]);
+				}
+			}
+
+			unset($_SESSION['cart']);
+	
+			echo ViewHelper::renderJSON(["orderIds" => $orderIds], 201);
+		} catch (Exception $e) {
+			echo ViewHelper::renderJSON("An error occurred: " . $e->getMessage(), 500);
 		}
 	}
 

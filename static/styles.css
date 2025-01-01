@@ -36,7 +36,7 @@ h4, h5 {
 	color: #173F4B;
 }
 
-#cartbtn, #price, .btn-group {
+#cartbtn, #price, #addbtn, .btn-group {
 	float: right;
 }
 

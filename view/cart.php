@@ -47,49 +47,45 @@
 			<h1>Your cart</h1>
 			<hr class="solid">
 			
-			<div class="card">
-				<div class="article-text">
-					<h4>Unreal Unearth</h4>
-					<h5>Hozier</h5>
-					<p id="price">45.99 €</p>
-				</div>
+			<?php if (!empty($_SESSION['cart'])): ?>
+				<?php $total = 0; ?>
+				
+				<?php foreach ($_SESSION['cart'] as $id => $item): ?>
+					<div class="card">
+						<div class="article-text">
+							<h4><?= $item['name'] ?></h4>
+							<h5><?= $item['artist'] ?></h5>
+							<p id="price"><?= $item['price'] ?> €</p>
+						</div>
 
-				<div class="card-footer">
-					<div class="btn-group">
-						<button type="button" class="btn btn-secondary">
-							<i class="fa-solid fa-minus"></i>
-						</button>
-						<button class="btn">1</button>
-						<button type="button" class="btn btn-secondary">
-							<i class="fa-solid fa-plus"></i>
-						</button>
+						<div class="card-footer">
+							<div class="btn-group">
+								<form method="POST" action="<?= BASE_URL . "cart/delete/" . $id ?>" style="display:inline;">
+									<button type="submit" class="btn btn-secondary">
+										<i class="fa-solid fa-minus"></i>
+									</button>
+								</form>
+								<button class="btn" disabled><?= $item['quantity'] ?></button>
+								<form method="POST" action="<?= BASE_URL . "cart/add/" . $id ?>" style="display:inline;">
+									<button type="submit" class="btn btn-secondary">
+										<i class="fa-solid fa-plus"></i>
+									</button>
+								</form>
+							</div>
+						</div>
 					</div>
-				</div>
-			</div>
-			<div class="card">
-				<div class="article-text">
-					<h4>Stick Season</h4>
-					<h5>Noah Kahan</h5>
-					<p id="price">29.99 €</p>
-				</div>
+					<?php $total += $item['price'] * $item['quantity']; ?>
+				<?php endforeach; ?>
 
-				<div class="card-footer">
-					<div class="btn-group">
-						<button type="button" class="btn btn-secondary">
-							<i class="fa-solid fa-minus"></i>
-						</button>
-						<button class="btn">1</button>
-						<button type="button" class="btn btn-secondary">
-							<i class="fa-solid fa-plus"></i>
-						</button>
-					</div>
+				<div class="total">
+					<h4>Total: <?= $total ?> €</h4>
+					<form method="POST" action="<?= BASE_URL . "orders/add" ?>">
+						<button id="checkout-btn" type="submit" class="btn btn-primary">Checkout</button>
+					</form>
 				</div>
-			</div>
-
-			<div class="total">
-				<h4>Total: 75,98 €</h4>
-				<button id="price" type="button" class="btn btn-primary">Checkout</button>
-			</div>
+			<?php else: ?>
+				<p>Your cart is empty.</p>
+			<?php endif; ?>
 		</div>
 
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

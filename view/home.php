@@ -16,7 +16,7 @@
 		<nav id="pagenav" class="navbar sticky-top justify-content-center">
 			<ul class="nav nav-pills">
 				<li class="nav-item">
-					<a class="nav-link" href="<?= BASE_URL . "home" ?>">
+					<a class="nav-link" href="<?= BASE_URL . "records" ?>">
 						<i class="fa-solid fa-house"></i>
 					</a>
 				</li>
@@ -53,7 +53,7 @@
 					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
 						<div class="card">
 							<div class="article-text">
-								<a id="detailed" href="<?= BASE_URL . "details/" . $article["id"] ?>">
+								<a id="detailed" href="<?= BASE_URL . "records/" . $article["id"] ?>">
 									<h4><?= $article["name"] ?></h4>
 								</a>
 								<h5><?= $article["artist"] ?></h5>
@@ -61,7 +61,7 @@
 							</div>
 
 							<div class="card-footer">
-								<button id="cartbtn" class="btn btn-primary">
+								<button id="cartbtn" class="btn btn-primary" onclick="addToCart(<?= $article['id'] ?>, '<?= $article['name'] ?>', <?= $article['artist'] ?>, <?= $article['price'] ?>, <?= $article['idSeller'] ?>)">
 									<i class="fa-solid fa-cart-shopping"></i>
 								</button>
 							</div>
@@ -69,7 +69,58 @@
 					</div>
 				<?php endforeach; ?>
 			</div>
+
+			<button id="addbtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addRecord">
+					<i class="fa-solid fa-plus"></i>
+				</button>
+
+				<div class="modal fade" tabindex="-1" role="form" aria-labelledby="addRecord" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5>Enter information about the record</h5>
+								<button type="button" class="close" data-bs-dismiss="modal" aria-label="close">
+									<span aria-hidden="true"></span>
+								</button>
+							</div>
+	
+							<form action="<?= BASE_URL . "records" ?>" method="post">
+								<div class="modal-body">
+									<p>
+										<input type="text" class="form-control" name="name" value="<?= $name ?>" placeholder="Album title" required />
+										<input type="text" class="form-control" name="description" value="<?= $description ?>" placeholder="Album description" required />
+										<input type="text" class="form-control" name="artist" value="<?= $artist ?>" placeholder="Album artist" required />
+										<input type="number" class="form-control" name="releaseYear" value="<?= $releaseYear ?>" placeholder="Year of release" required />
+										<input type="number" class="form-control" name="price" value="<?= $price ?>" placeholder="Price" required />
+									</p>
+								</div>
+		
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+									<button type="submit" class="btn btn-primary">Submit</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>"
 		</div>
+
+		<script>
+		function addToCart(id, name, artis, price, idSeller) {
+			fetch('<?= BASE_URL ?>api/cart', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ id: id, name: name, artist: artist, price: price, idSeller: idSeller })
+			})
+			.then(response => response.json())
+			.then(data => {
+				if (data.message) {
+					alert(data.message);
+				}
+			})
+			.catch(error => console.error('Error:', error));
+		}
+		</script>
 
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 	</body>

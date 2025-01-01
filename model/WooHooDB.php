@@ -14,6 +14,10 @@ class WooHooDB extends AbstractDB {
 			. "VALUES ('neobdelano', :idCustomer, :idSeller)", $params);
 	}
 
+	public static function insertOrderArticle(array $params) {
+		return parent::modify("INSERT INTO ordersArticles (idOrder, idArticle) VALUES (:idOrder, :idArticle)", $params);
+	}
+
 	public static function insertProfile(array $params) {
 		return parent::modify("INSERT INTO users (name, surname, address, addressNumber, postalCode, email, role) "
 			. "VALUES (':name', :surname, :address, :addressNumber, :postalCode, :email, :role)", $params);
@@ -77,7 +81,12 @@ class WooHooDB extends AbstractDB {
 		return parent::query("SELECT id, name, artist, price, CONCAT(:prefix, id) as uri FROM articles", $prefix);
 	}
 
-	public static function getAllOrders(array $prefix) {
-		return parent::query("SELECT id, status, idSeller CONCAT(:prefix, id) as uri FROM articles WHERE idCustomer = :idCustomer", $prefix);
+	public static function getAllOrders($userId, $prefix) {
+		$params = [
+			':idCustomer' => $userId,
+			':prefix' => $prefix
+		];
+
+		return parent::query("SELECT id, status, idSeller CONCAT(:prefix, id) as uri FROM articles WHERE idCustomer = :idCustomer", $params);
 	}
 }

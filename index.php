@@ -34,6 +34,23 @@ $urls = [
 				break;
 		}
 	},
+	"/^api\/cart$/" => function ($method) {
+        switch ($method) {
+            case "POST":
+                CartController::add();
+                break;
+            default:
+                CartController::index();
+                break;
+        }
+    },
+    "/^api\/cart\/(\d+)$/" => function ($method, $id) {
+        switch ($method) {
+            case "DELETE":
+                CartController::delete($id);
+                break;
+        }
+    },
 	"/^api\/orders\/(\d+)$/"=> function ($method, $userId) {
 		switch ($method) {
 			case "POST":

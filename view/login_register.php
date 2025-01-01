@@ -72,7 +72,7 @@
 							CREATE A NEW ACCOUNT
 						</div>
 			
-						<form action="<?= BASE_URL . "register" ?>">
+						<form action="<?= BASE_URL . "profile" ?>" method="post">
 							<div class="card-body">
 								<label class="form-label">E-mail</label><br>
 								<input type="email" class="form-control" name="email" value="<?= $email ?>" placeholder="" required /><br>
@@ -88,12 +88,6 @@
 								<input type="text" class="form-control" name="street" value="<?= $address ?>" placeholder="Street name" required />
 								<input type="number" class="form-control" name="streetNo" value="<?= $addressNumber ?>" placeholder="House number"required />
 								<input type="number" class="form-control" name="postcode" value="<?= $postalCode ?>" placeholder="Postcode" required /><br>
-							
-								<label class="form-label">I'm a ...</label><br>
-								<input type="radio" class="form-check-input" id="customer" name="role" value="customer" required>
-								<label class="form-check-label" for="customer">customer</label><br>
-								<input type="radio" class="form-check-input" id="seller" name="role" value="seller" required>
-								<label class="form-check-label" for="seller">seller</label>
 							</div>
 							
 							<div class="card-footer">

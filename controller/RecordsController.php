@@ -23,6 +23,7 @@ class RecordsController {
 	}
 
 	public static function add() {
+		$idSeller = $_SESSION['user_id'];
 		$data = filter_input_array(INPUT_POST, self::getRules());
 
 		if (self::checkValues($data)) {
