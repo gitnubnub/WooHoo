@@ -9,7 +9,7 @@ class ProfileController {
 	}
 
 	public static function index() {
-		
+            echo ViewHelper::render("view/login_register.php");
 	}
 
 	public static function add() {

@@ -2,18 +2,17 @@
 
 class CartController {
     public static function add() {
-        $data = json_decode(file_get_contents("php://input"), true);
 
         if (!isset($_SESSION["cart"])) {
             $_SESSION["cart"] = [];
         }
 
         $item = [
-            "id" => $data["id"],
-            "name" => $data["name"],
-			"artist"=> $data["artist"],
-            "price" => $data["price"],
-			"idSeller" => $data["idSeller"],
+            "id" => $_POST["id"],
+            "name" => $_POST["name"],
+            "artist"=> $_POST["artist"],
+            "price" => $_POST["price"],
+            "idSeller" => $_POST["idSeller"],
             "quantity" => 1,
         ];
 
@@ -31,13 +30,20 @@ class CartController {
             $_SESSION["cart"][] = $item;
         }
 
-        echo ViewHelper::renderJSON(['message' => 'Item added to cart', 'cart' => $_SESSION['cart']]);
+        echo ViewHelper::redirect(BASE_URL . "cart/");
     }
 
     public static function index() {
         echo ViewHelper::render("view/cart.php", ['cart' => $_SESSION['cart']]);
     }
 
+    public static function increase($id) {
+        if (isset($_SESSION['cart'][$id])) {
+            $_SESSION['cart'][$id]['quantity']++;
+            echo ViewHelper::render("view/cart.php", ['cart' => $_SESSION['cart']]);
+        }
+    }
+    
     public static function delete($id) {
         if (isset($_SESSION['cart'][$id])) {
 			$_SESSION['cart'][$id]['quantity']--;
@@ -46,12 +52,7 @@ class CartController {
 				unset($_SESSION['cart'][$id]);
 			}
 	
-			echo ViewHelper::renderJSON([
-				'message' => 'Item quantity reduced or removed from cart',
-				'cart' => $_SESSION['cart']
-			]);
-		} else {
-			echo ViewHelper::renderJSON(['error' => 'Item not found in cart'], 404);
+			echo ViewHelper::render("view/cart.php", ['cart' => $_SESSION['cart']]);
 		}
     }
 }

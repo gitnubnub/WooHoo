@@ -78,7 +78,7 @@ class WooHooDB extends AbstractDB {
 	}
 
 	public static function getAllRecords() {
-		return parent::query("SELECT id, name, artist, price FROM articles");
+		return parent::query("SELECT id, name, artist, price, idSeller FROM articles");
 	}
 
 	public static function getAllOrders($userId) {

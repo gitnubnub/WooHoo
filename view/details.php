@@ -16,7 +16,7 @@
 		<nav id="pagenav" class="navbar sticky-top justify-content-center">
 			<ul class="nav nav-pills">
 				<li class="nav-item">
-					<a class="nav-link" href="<?= BASE_URL . "home" ?>">
+					<a class="nav-link" href="<?= BASE_URL . "records" ?>">
 						<i class="fa-solid fa-house"></i>
 					</a>
 				</li>
@@ -46,7 +46,7 @@
 		<div id="content">
 			<div class="row">
 				<div class="col-md-9">
-					<h1><?= $title ?></h1>
+					<h1><?= $name ?></h1>
 					<h3><?= $artist ?></h3>
 					<p><?= $description ?></p>
 					<h6>Released: <?= $releaseYear ?></h6>

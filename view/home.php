@@ -49,7 +49,7 @@
 			<p>Have a look at what our sellers have to offer and browse for your most desired titles.</p>
 
 			<div class="row">
-				<?php foreach ($articles as $article): ?>
+				<?php foreach ($records as $article): ?>
 					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
 						<div class="card">
 							<div class="article-text">
@@ -61,9 +61,17 @@
 							</div>
 
 							<div class="card-footer">
-								<button id="cartbtn" class="btn btn-primary" onclick="addToCart(<?= $article['id'] ?>, '<?= $article['name'] ?>', <?= $article['artist'] ?>, <?= $article['price'] ?>, <?= $article['idSeller'] ?>)">
-									<i class="fa-solid fa-cart-shopping"></i>
-								</button>
+								<form action="<?= BASE_URL . "cart" ?>" method="post" style="display: inline;">
+                                                                    <input type="hidden" name="id" value="<?= $article['id'] ?>">
+                                                                    <input type="hidden" name="name" value="<?= htmlspecialchars($article['name'], ENT_QUOTES) ?>">
+                                                                    <input type="hidden" name="artist" value="<?= htmlspecialchars($article['artist'], ENT_QUOTES) ?>">
+                                                                    <input type="hidden" name="price" value="<?= $article['price'] ?>">
+                                                                    <input type="hidden" name="idSeller" value="<?= $article['idSeller'] ?>">
+                                                                    <button id="cartbtn" type="submit" class="btn btn-primary">
+                                                                        <i class="fa-solid fa-cart-shopping"></i>
+                                                                    </button>
+                                                                </form>
+
 							</div>
 						</div>
 					</div>
@@ -102,25 +110,8 @@
 							</form>
 						</div>
 					</div>
-				</div>"
+				</div>
 		</div>
-
-		<script>
-		function addToCart(id, name, artis, price, idSeller) {
-			fetch('<?= BASE_URL ?>api/cart', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ id: id, name: name, artist: artist, price: price, idSeller: idSeller })
-			})
-			.then(response => response.json())
-			.then(data => {
-				if (data.message) {
-					alert(data.message);
-				}
-			})
-			.catch(error => console.error('Error:', error));
-		}
-		</script>
 
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 	</body>

@@ -4,6 +4,7 @@ session_start();
 require_once("controller/RecordsController.php");
 require_once("controller/OrdersController.php");
 require_once("controller/ProfileController.php");
+require_once("controller/CartController.php");
 
 define("BASE_URL", rtrim($_SERVER["SCRIPT_NAME"], "index.php"));
 define("CSS_URL", rtrim($_SERVER["SCRIPT_NAME"], "index.php") . "static/");
@@ -34,21 +35,32 @@ $urls = [
 				break;
 		}
 	},
+        "/^search$/" => function () {
+            echo ViewHelper::render("view/search.php");
+        },
 	"/^cart$/" => function ($method) {
-        switch ($method) {
-            case "POST":
-                CartController::add();
-                break;
-            default:
-                CartController::index();
-                break;
-        }
-    },
-    "/^api\/cart\/(\d+)$/" => function ($method, $id) {
-        if ($method == "DELETE") {
-			CartController::delete($id);
-        }
-    },
+            switch ($method) {
+                case "POST":
+                    CartController::add();
+                    break;
+                default:
+                    CartController::index();
+                    break;
+            }
+        },
+        "/^cart\/add\/(\d+)$/" => function ($method, $id) {
+            if ($method == "POST") {
+                CartController::increase($id);
+            }
+        },
+        "/^cart\/delete\/(\d+)$/" => function ($method, $id) {
+            if ($method == "POST") {
+                CartController::delete($id);
+            }
+        },
+        "/^orders$/" => function () {
+            ViewHelper::redirect(BASE_URL . "profile");
+        },
 	"/^orders\/(\d+)$/"=> function ($method, $userId) {
 		switch ($method) {
 			case "POST":

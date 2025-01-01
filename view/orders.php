@@ -16,7 +16,7 @@
 		<nav id="pagenav" class="navbar sticky-top justify-content-center">
 			<ul class="nav nav-pills">
 				<li class="nav-item">
-					<a class="nav-link" href="<?= BASE_URL . "home" ?>">
+					<a class="nav-link" href="<?= BASE_URL . "records" ?>">
 						<i class="fa-solid fa-house"></i>
 					</a>
 				</li>

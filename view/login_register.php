@@ -16,7 +16,7 @@
 		<nav id="pagenav" class="navbar sticky-top justify-content-center">
 			<ul class="nav nav-pills">
 				<li class="nav-item">
-					<a class="nav-link" href="<?= BASE_URL . "home" ?>">
+					<a class="nav-link" href="<?= BASE_URL . "records" ?>">
 						<i class="fa-solid fa-house"></i>
 					</a>
 				</li>
@@ -54,9 +54,9 @@
 						<form action="<?= BASE_URL . "login" ?>" method="post">
 							<div class="card-body">
 								<label class="form-label">E-mail</label><br>
-								<input type="email" class="form-control" name="email" value="<?= $email ?>" placeholder="" required /><br>
+								<input type="email" class="form-control" name="email" value="<?= isset($email) ? $email : '' ?>" placeholder="" required /><br>
 								<label class="form-label">Password</label><br>
-								<input type="password" class="form-control" name="password" value="<?= $password ?>" placeholder="" required /><br>
+								<input type="password" class="form-control" name="password" value="<?= isset($password) ? $password : '' ?>" placeholder="" required /><br>
 							</div>
 							
 							<div class="card-footer">
@@ -75,19 +75,19 @@
 						<form action="<?= BASE_URL . "profile" ?>" method="post">
 							<div class="card-body">
 								<label class="form-label">E-mail</label><br>
-								<input type="email" class="form-control" name="email" value="<?= $email ?>" placeholder="" required /><br>
+								<input type="email" class="form-control" name="email" value="<?= isset($email) ? $email : '' ?>" placeholder="" required /><br>
 							
 								<label class="form-label">Password</label><br>
-								<input type="password" class="form-control" name="password" value="<?= $password ?>" placeholder="" required /><br>
+								<input type="password" class="form-control" name="password" value="<?= isset($password) ? $password : '' ?>" placeholder="" required /><br>
 
 								<label class="form-label">Full name</label>
-								<input type="text" class="form-control" name="name" value="<?= $name ?>" placeholder="First name" required />
-								<input type="text" class="form-control" name="surname" value="<?= $surname ?>" placeholder="Last name" required /><br>
+								<input type="text" class="form-control" name="name" value="<?= isset($name) ? $name : '' ?>" placeholder="First name" required />
+								<input type="text" class="form-control" name="surname" value="<?= isset($surname) ? $surname : '' ?>" placeholder="Last name" required /><br>
 
 								<label class="form-label">Address</label><br>
-								<input type="text" class="form-control" name="street" value="<?= $address ?>" placeholder="Street name" required />
-								<input type="number" class="form-control" name="streetNo" value="<?= $addressNumber ?>" placeholder="House number"required />
-								<input type="number" class="form-control" name="postcode" value="<?= $postalCode ?>" placeholder="Postcode" required /><br>
+								<input type="text" class="form-control" name="street" value="<?= isset($address) ? $address : '' ?>" placeholder="Street name" required />
+								<input type="number" class="form-control" name="streetNo" value="<?= isset($addressNumber) ? $addressNumber : '' ?>" placeholder="House number"required />
+								<input type="number" class="form-control" name="postcode" value="<?= isset($postalCode) ? $postalCode : '' ?>" placeholder="Postcode" required /><br>
 							</div>
 							
 							<div class="card-footer">
