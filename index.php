@@ -129,12 +129,8 @@ $urls = [
 				break;
 		}
 	},
-	"/^.*$/" => function () {
-		echo "Unmatched path: " . $_SERVER["REQUEST_URI"];
-		exit;
-	},
         #REST API
-        "/^api\/records\/(\d+)$/" => function ($id) {
+        "/^api\/records\/(\d+)$/" => function ($method, $id) {
             RecordsRESTController::get($id);
             /*switch ($method) {
                 case "PUT":
@@ -158,7 +154,11 @@ $urls = [
                     RecordsRESTController::index();
                     break;
             } */
-        },      
+        },
+	"/^.*$/" => function () {
+		echo "Unmatched path: " . $_SERVER["REQUEST_URI"];
+		exit;
+	}     
 ];
 
 foreach ($urls as $pattern => $controller) {
