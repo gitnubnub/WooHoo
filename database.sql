@@ -13,6 +13,7 @@ CREATE TABLE `users` (
     `addressNumber` VARCHAR(100),
     `postalCode` VARCHAR(20),
     `email` VARCHAR(255) NOT NULL,
+    `isActive` BOOLEAN DEFAULT TRUE,
     `hash` VARCHAR(255) NOT NULL,
     `salt` VARCHAR(255) NOT NULL,
     `role` ENUM('Admin', 'Seller', 'Customer') NOT NULL
@@ -41,6 +42,7 @@ CREATE TABLE `articles` (
     `rating` FLOAT DEFAULT 0.0,
     `numberOfRatings` INT DEFAULT 0,
     `price` FLOAT NOT NULL,
+    `isActive` BOOLEAN DEFAULT TRUE,
     `idSeller` INT NOT NULL,
     FOREIGN KEY (`idSeller`) REFERENCES `users`(`id`)
 );
