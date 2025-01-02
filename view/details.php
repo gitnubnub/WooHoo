@@ -68,9 +68,16 @@
 						</div>
 		
 						<div class="card-footer">
-							<button id="cartbtn" class="btn btn-primary">
-								<i class="fa-solid fa-cart-shopping"></i>
-							</button>
+							<form action="<?= BASE_URL . "cart" ?>" method="post" style="display: inline;">
+								<input type="hidden" name="id" value="<?= $id ?>">
+								<input type="hidden" name="name" value="<?= htmlspecialchars($name, ENT_QUOTES) ?>">
+								<input type="hidden" name="artist" value="<?= htmlspecialchars($artist, ENT_QUOTES) ?>">
+								<input type="hidden" name="price" value="<?= $price ?>">
+								<input type="hidden" name="idSeller" value="<?= $idSeller ?>">
+								<button id="cartbtn" type="submit" class="btn btn-primary">
+									<i class="fa-solid fa-cart-shopping"></i>
+								</button>
+							</form>
 						</div>
 					</div>
 				</div>

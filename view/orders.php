@@ -51,7 +51,7 @@
                             <?php foreach ($orders as $order): ?>
                                     <div class="card">
                                             <div class="article-text">
-                                                    <h6>From: <?= $order["seller"] ?></h6>
+                                                    <h6>From: <?= $order["idSeller"] ?></h6>
                                                     <p>Status: <?= $order["status"] ?></p>
                                                     <p id="price">[price?]</p>
                                             </div>

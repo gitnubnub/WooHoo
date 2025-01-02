@@ -79,7 +79,7 @@
 
 				<div class="total">
 					<h4>Total: <?= $total ?> €</h4>
-					<form method="POST" action="<?= BASE_URL . "orders" ?>">
+					<form method="POST" action="<?= BASE_URL . "orders/" . $_SESSION['user_id'] ?>">
 						<button id="checkout-btn" type="submit" class="btn btn-primary">Checkout</button>
 					</form>
 				</div>
