@@ -42,6 +42,7 @@ CREATE TABLE `articles` (
     `rating` FLOAT DEFAULT 0.0,
     `numberOfRatings` INT DEFAULT 0,
     `price` FLOAT NOT NULL,
+    PRIMARY KEY (`id`),
     `isActive` BOOLEAN DEFAULT TRUE,
     `idSeller` INT NOT NULL,
     FOREIGN KEY (`idSeller`) REFERENCES `users`(`id`)

@@ -2,6 +2,7 @@
 session_start();
 
 require_once("controller/RecordsController.php");
+require_once("controller/RecordsRESTController.php");
 require_once("controller/OrdersController.php");
 require_once("controller/ProfileController.php");
 require_once("controller/CartController.php");
@@ -131,7 +132,33 @@ $urls = [
 	"/^.*$/" => function () {
 		echo "Unmatched path: " . $_SERVER["REQUEST_URI"];
 		exit;
-	}
+	},
+        #REST API
+        "/^api\/records\/(\d+)$/" => function ($id) {
+            RecordsRESTController::get($id);
+            /*switch ($method) {
+                case "PUT":
+                    RecordsRESTController::edit($id);
+                    break;
+                case "DELETE":
+                    RecordsRESTController::delete($id);
+                    break;
+                default: # GET
+                    RecordsRESTController::get($id);
+                    break;
+            }*/
+        },
+        "/^api\/records$/" => function () {
+            RecordsRESTController::index();
+            /*switch ($method) {
+                case "POST":
+                    RecordsRESTController::add();
+                    break;
+                default: // GET
+                    RecordsRESTController::index();
+                    break;
+            } */
+        },      
 ];
 
 foreach ($urls as $pattern => $controller) {
