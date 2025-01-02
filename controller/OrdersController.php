@@ -9,31 +9,61 @@ class OrdersController {
 	}
 
 	public static function index($userId) {
-            $orders = WooHooDB::getAllOrders($userId);
-            $groupedOrders = [];
+            if (isset($_SESSION['role']) && isset($_SESSION['user_id']) && $_SESSION['role'] == 'Seller') {
+                $orders = WooHooDB::getAllOrdered($_SESSION['user_id']);
+                $groupedOrders = [];
 
-            foreach ($orders as $order) {
-                if (!isset($groupedOrders[$order['orderId']])) {
-                    $groupedOrders[$order['orderId']] = [
-                        'orderId' => $order['orderId'],
-                        'status' => $order['status'],
-                        'price' => $order['price'],
-                        'idSeller' => $order['idSeller'],
-                        'sellerName' => $order['sellerName'],
-                        'sellerSurname' => $order['sellerSurname'],
-                        'articles' => []
+                foreach ($orders as $order) {
+                    if (!isset($groupedOrders[$order['orderId']])) {
+                        $groupedOrders[$order['orderId']] = [
+                            'orderId' => $order['orderId'],
+                            'status' => $order['status'],
+                            'price' => $order['price'],
+                            'customerName' => $order['customerName'],
+                            'customerSurname' => $order['customerSurname'],
+                            'customerStreet' => $order['customerStreet'],
+                            'customerNumber' => $order['customerNumber'],
+                            'customerPost' => $order['customerPost'],
+                            'articles' => []
+                        ];
+                    }
+
+                    $groupedOrders[$order['orderId']]['articles'][] = [
+                        'articleId' => $order['articleId'],
+                        'name' => $order['articleName'],
+                        'artist' => $order['articleArtist'],
+                        'price' => $order['articlePrice']
+                    ];
+                }
+                
+                echo ViewHelper::render("view/orders.php", ["groupedOrders" => $groupedOrders]);
+            } else {
+		$orders = WooHooDB::getAllOrders($userId);
+                $groupedOrders = [];
+
+                foreach ($orders as $order) {
+                    if (!isset($groupedOrders[$order['orderId']])) {
+                        $groupedOrders[$order['orderId']] = [
+                            'orderId' => $order['orderId'],
+                            'status' => $order['status'],
+                            'price' => $order['price'],
+                            'idSeller' => $order['idSeller'],
+                            'sellerName' => $order['sellerName'],
+                            'sellerSurname' => $order['sellerSurname'],
+                            'articles' => []
+                        ];
+                    }
+
+                    $groupedOrders[$order['orderId']]['articles'][] = [
+                        'articleId' => $order['articleId'],
+                        'name' => $order['articleName'],
+                        'artist' => $order['articleArtist'],
+                        'price' => $order['articlePrice']
                     ];
                 }
 
-                $groupedOrders[$order['orderId']]['articles'][] = [
-                    'articleId' => $order['articleId'],
-                    'name' => $order['articleName'],
-                    'artist' => $order['articleArtist'],
-                    'price' => $order['articlePrice']
-                ];
+                echo ViewHelper::render("view/orders.php", ['groupedOrders' => $groupedOrders]);
             }
-            
-            echo ViewHelper::render("view/orders.php", ['groupedOrders' => $groupedOrders]);
 	}
 
 	public static function add() {
@@ -60,10 +90,12 @@ class OrdersController {
                                 $orderIds[] = $orderId;
                                 
 				foreach ($articles as $article) {
+                                    for ($i = 0; $i < $article['quantity']; $i++) {
 					WooHooDB::insertOrderArticle([
 						"idOrder" => $orderId,
 						"idArticle" => $article['id'],
 					]);
+                                    }
 				}
 			}
 

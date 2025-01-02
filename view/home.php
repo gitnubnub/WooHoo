@@ -25,11 +25,15 @@
 						<i class="fa-solid fa-magnifying-glass"></i>
 					</a>
 				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="<?= BASE_URL . "cart" ?>">
-						<i class="fa-solid fa-cart-shopping"></i>
-					</a>
-				</li>
+                                
+                                <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Customer'): ?>
+                                    <li class="nav-item">
+                                            <a class="nav-link" href="<?= BASE_URL . "cart" ?>">
+                                                    <i class="fa-solid fa-cart-shopping"></i>
+                                            </a>
+                                    </li>
+                                <?php endif; ?>
+                                    
 				<li class="nav-item">
 					<a class="nav-link" href="<?= BASE_URL . "orders" ?>">
 						<i class="fa-solid fa-file-invoice"></i>
@@ -57,9 +61,10 @@
 									<h4><?= $article["name"] ?></h4>
 								</a>
 								<h5><?= $article["artist"] ?></h5>
-								<p><?= $article["price"] ?></p>
+								<p><?= $article["price"] ?> €</p>
 							</div>
-
+                                                    
+                                                    <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Customer'): ?>
 							<div class="card-footer">
 								<form action="<?= BASE_URL . "cart" ?>" method="post" style="display: inline;">
                                                                     <input type="hidden" name="id" value="<?= $article['id'] ?>">
@@ -73,6 +78,7 @@
                                                                 </form>
 
 							</div>
+                                                    <?php endif; ?>
 						</div>
 					</div>
 				<?php endforeach; ?>
@@ -96,11 +102,19 @@
                                                             <form action="<?= BASE_URL . "records" ?>" method="post">
                                                                     <div class="modal-body">
                                                                             <p>
-                                                                                    <input type="text" class="form-control" name="name" value="<?= $name ?>" placeholder="Album title" required />
-                                                                                    <input type="text" class="form-control" name="description" value="<?= $description ?>" placeholder="Album description" required />
-                                                                                    <input type="text" class="form-control" name="artist" value="<?= $artist ?>" placeholder="Album artist" required />
-                                                                                    <input type="number" class="form-control" name="releaseYear" value="<?= $releaseYear ?>" placeholder="Year of release" required />
-                                                                                    <input type="number" class="form-control" name="price" value="<?= $price ?>" placeholder="Price" required />
+                                                                                <input type="text" class="form-control" name="name" value="<?= isset($name) ? $name : '' ?>" placeholder="Album title" required />
+                                                                                <input type="text" class="form-control" name="artist" value="<?= isset($artist) ? $artist : '' ?>" placeholder="Album artist" required />
+                                                                            </p>
+
+                                                                            <p>
+                                                                                <input type="text" class="form-control" name="description" value="<?= isset($description) ? $description : '' ?>" placeholder="Album description" required />
+                                                                            </p>
+
+                                                                            <p>
+                                                                                <input type="number" class="form-control" name="releaseYear" value="<?= isset($releaseYear) ? $releaseYear : '' ?>" placeholder="Year of release" required />
+                                                                            </p>
+                                                                            <p>
+                                                                                <input type="number" class="form-control" name="price" value="<?= isset($price) ? $price : '' ?>" placeholder="Price" required />
                                                                             </p>
                                                                     </div>
 

@@ -50,9 +50,9 @@ CREATE TABLE `articles` (
 -- Table: ordersArticles
 DROP TABLE IF EXISTS `ordersArticles`;
 CREATE TABLE `ordersArticles` (
+    `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `idOrder` INT NOT NULL,
     `idArticle` INT NOT NULL,
-    PRIMARY KEY (`idOrder`, `idArticle`),
     FOREIGN KEY (`idOrder`) REFERENCES `orders`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`idArticle`) REFERENCES `articles`(`id`) ON DELETE CASCADE
 );

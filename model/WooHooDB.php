@@ -24,8 +24,8 @@ class WooHooDB extends AbstractDB {
         }
 
 	public static function updateRecord(array $params) {
-		return parent::modify("UPDATE articles SET name = :name, description = :description, artist = :artist, releaseYear = :releaseYear, "
-			. "rating = :rating, numberOfRatings = :numberOfRatings, price = :price WHERE id = :id", $params);
+		return parent::modify("UPDATE articles SET name = :name, artist = :artist, description = :description, releaseYear = :releaseYear, "
+			. "price = :price WHERE id = :id", $params);
 	}
 
 	public static function updateOrder(array $params) {
@@ -92,11 +92,11 @@ class WooHooDB extends AbstractDB {
         }
 
 	public static function getAllRecords() {
-		return parent::query("SELECT id, name, artist, price, idSeller FROM articles");
+		return parent::query("SELECT id, name, artist, price, idSeller FROM articles WHERE isActive = TRUE");
 	}
         
         public static function getAllRecordsFromSeller($sellerId) {
-		return parent::query("SELECT id, name, artist, price, idSeller FROM articles WHERE idSeller = :idSeller", $sellerId);
+		return parent::query("SELECT id, name, artist, price, idSeller FROM articles WHERE idSeller = :idSeller AND isActive = TRUE", ["idSeller" => $sellerId]);
 	}
 
 	public static function getAllOrders($userId) {
@@ -122,6 +122,27 @@ class WooHooDB extends AbstractDB {
         }
         
         public static function getAllOrdered($userId) {
-		return parent::query("SELECT id, status FROM articles WHERE idSeller = :idSeller", $userId);
+		return parent::query(
+                    "SELECT 
+                        o.id AS orderId, 
+                        o.status, 
+                        o.price,
+                        c.name AS customerName, 
+                        c.surname AS customerSurname, 
+                        c.address AS customerStreet, 
+                        c.addressNumber AS customerNumber, 
+                        c.postalCode AS customerPost, 
+                        a.id AS articleId, 
+                        a.name AS articleName, 
+                        a.artist AS articleArtist, 
+                        a.price AS articlePrice
+                     FROM orders o
+                     JOIN users s ON o.idSeller = s.id
+                     JOIN users c ON o.idCustomer = c.id
+                     LEFT JOIN ordersArticles oa ON o.id = oa.idOrder
+                     LEFT JOIN articles a ON oa.idArticle = a.id
+                     WHERE o.idSeller = :idSeller",
+                    ["idSeller" => $userId]
+                );
 	}
 }

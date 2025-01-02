@@ -25,11 +25,15 @@
 						<i class="fa-solid fa-magnifying-glass"></i>
 					</a>
 				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="<?= BASE_URL . "cart" ?>">
-						<i class="fa-solid fa-cart-shopping"></i>
-					</a>
-				</li>
+				
+                                <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Customer'): ?>
+                                    <li class="nav-item">
+                                            <a class="nav-link" href="<?= BASE_URL . "cart" ?>">
+                                                    <i class="fa-solid fa-cart-shopping"></i>
+                                            </a>
+                                    </li>
+                                <?php endif; ?>
+                                    
 				<li class="nav-item">
 					<a class="nav-link" href="<?= BASE_URL . "orders" ?>">
 						<i class="fa-solid fa-file-invoice"></i>
