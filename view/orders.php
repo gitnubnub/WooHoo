@@ -51,15 +51,56 @@
                             <?php foreach ($orders as $order): ?>
                                     <div class="card">
                                             <div class="article-text">
-                                                    <h6>From: <?= $order["idSeller"] ?></h6>
+                                                    <h6>From: <?= $order["sellerName"] ?> <?= $order["sellerSurname"] ?></h6>
                                                     <p>Status: <?= $order["status"] ?></p>
-                                                    <p id="price">[price?]</p>
+                                                    <p id="price"><?= $order["price"] ?></p>
                                             </div>
 
                                             <div class="card-footer">
-                                                    <button id="cartbtn" class="btn btn-primary">
-                                                            View details
-                                                    </button>
+                                                <button id="cartbtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewDetails<?= $order['id'] ?>">
+                                                    View details
+                                                </button>
+
+                                                <div id="viewDetails<?= $order['id'] ?>" class="modal fade" tabindex="-1" aria-labelledby="viewDetails" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                            <h4>Order details</h4>
+                                                                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="close">
+                                                                                    <span aria-hidden="true"></span>
+                                                                            </button>
+                                                                    </div>
+                                                                    
+                                                                    <div class="modal-body">
+                                                                        <h5>Seller:</h5>
+                                                                        <p><?= $order["sellerName"] ?> <?= $order["sellerSurname"] ?></p>
+                                                                        
+                                                                        <h5>Status:</h5>
+                                                                        <p><?= $order["status"] ?></p>
+                                                                        
+                                                                        <h5>Articles:</h5>
+                                                                        <?php if (!empty($order["articles"])): ?>
+                                                                            <ul>
+                                                                                <?php foreach ($order["articles"] as $article): ?>
+                                                                                    <li>
+                                                                                        <?= $article["name"] ?> by <?= $article["artist"] ?> - <?= $article["price"] ?> €
+                                                                                    </li>
+                                                                                <?php endforeach; ?>
+                                                                            </ul>
+                                                                        <?php else: ?>
+                                                                            <p>No articles in this order.</p>
+                                                                        <?php endif; ?>
+                                                                        
+                                                                        <h5>Total price:</h5>
+                                                                        <p><?= $order["price"] ?></p>
+                                                                    </div>
+
+                                                                    <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                                                    </div>
+                                                                </div>
+                                                        </div>
+                                                </div>
                                             </div>
                                     </div>
                             <?php endforeach; ?>

@@ -23,12 +23,18 @@ class OrdersController {
 	
 			$orderIds = [];
 			foreach ($cartGroupedBySeller as $idSeller => $articles) {
-				$orderId = WooHooDB::insertOrder([
-					"idCustomer" => $idCustomer,
-					"idSeller" => $idSeller,
-				]);
-				$orderIds[] = $orderId;
+				$totalPrice = 0;
+                                foreach ($articles as $article) {
+                                    $totalPrice += $article['price'] * $article['quantity'];
+                                }
 
+                                $orderId = WooHooDB::insertOrder([
+                                    "price" => $totalPrice,
+                                    "idCustomer" => $idCustomer,
+                                    "idSeller" => $idSeller
+                                ]);
+                                $orderIds[] = $orderId;
+                                
 				foreach ($articles as $article) {
 					WooHooDB::insertOrderArticle([
 						"idOrder" => $orderId,

@@ -39,13 +39,17 @@ $urls = [
             echo ViewHelper::render("view/search.php");
         },
 	"/^cart$/" => function ($method) {
-            switch ($method) {
-                case "POST":
-                    CartController::add();
-                    break;
-                default:
-                    CartController::index();
-                    break;
+            if (isset($_SESSION['user_id'])) {
+                switch ($method) {
+                    case "POST":
+                        CartController::add();
+                        break;
+                    default:
+                        CartController::index();
+                        break;
+                }
+            } else {
+                ViewHelper::redirect(BASE_URL . "profile");
             }
         },
         "/^cart\/add\/(\d+)$/" => function ($method, $id) {

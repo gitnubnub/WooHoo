@@ -10,8 +10,8 @@ class WooHooDB extends AbstractDB {
 	}
 
 	public static function insertOrder(array $params) {
-		return parent::modify("INSERT INTO orders (status, idCustomer, idSeller) "
-			. "VALUES ('neobdelano', :idCustomer, :idSeller)", $params);
+		return parent::modify("INSERT INTO orders (status, price, idCustomer, idSeller) "
+			. "VALUES ('unprocessed', :price, :idCustomer, :idSeller)", $params);
 	}
 
 	public static function insertOrderArticle(array $params) {
@@ -100,8 +100,26 @@ class WooHooDB extends AbstractDB {
 	}
 
 	public static function getAllOrders($userId) {
-		return parent::query("SELECT id, status, idSeller FROM orders WHERE idCustomer = :idCustomer", ["idCustomer" => $userId]);
-	}
+            return parent::query(
+                "SELECT 
+                    o.id AS orderId, 
+                    o.status, 
+                    o.price, 
+                    o.idSeller, 
+                    u.name AS sellerName, 
+                    u.surname AS sellerSurname,
+                    a.id AS articleId, 
+                    a.name AS articleName, 
+                    a.artist AS articleArtist, 
+                    a.price AS articlePrice
+                 FROM orders o
+                 JOIN users u ON o.idSeller = u.id
+                 LEFT JOIN ordersArticles oa ON o.id = oa.idOrder
+                 LEFT JOIN articles a ON oa.idArticle = a.id
+                 WHERE o.idCustomer = :idCustomer",
+                ["idCustomer" => $userId]
+            );
+        }
         
         public static function getAllOrdered($userId) {
 		return parent::query("SELECT id, status FROM articles WHERE idSeller = :idSeller", $userId);
