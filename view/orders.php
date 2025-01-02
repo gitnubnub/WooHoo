@@ -47,8 +47,8 @@
 			<h1>Your orders</h1>
 			<hr class="solid">
 			
-                        <?php if (!empty($orders)): ?>
-                            <?php foreach ($orders as $order): ?>
+                        <?php if (!empty($groupedOrders)): ?>
+                            <?php foreach ($groupedOrders as $order): ?>
                                     <div class="card">
                                             <div class="article-text">
                                                     <h6>From: <?= $order["sellerName"] ?> <?= $order["sellerSurname"] ?></h6>
@@ -57,11 +57,11 @@
                                             </div>
 
                                             <div class="card-footer">
-                                                <button id="cartbtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewDetails<?= $order['id'] ?>">
+                                                <button id="cartbtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewDetails<?= $order['orderId'] ?>">
                                                     View details
                                                 </button>
 
-                                                <div id="viewDetails<?= $order['id'] ?>" class="modal fade" tabindex="-1" aria-labelledby="viewDetails" aria-hidden="true">
+                                                <div id="viewDetails<?= $order['orderId'] ?>" class="modal fade" tabindex="-1" aria-labelledby="viewDetails" aria-hidden="true">
                                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
