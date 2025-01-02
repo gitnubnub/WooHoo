@@ -9,7 +9,31 @@ class OrdersController {
 	}
 
 	public static function index($userId) {
-		echo ViewHelper::render("view/orders.php", ["orders" => WooHooDB::getAllOrders($userId)]);
+            $orders = WooHooDB::getAllOrders($userId);
+            $groupedOrders = [];
+
+            foreach ($orders as $order) {
+                if (!isset($groupedOrders[$order['orderId']])) {
+                    $groupedOrders[$order['orderId']] = [
+                        'orderId' => $order['orderId'],
+                        'status' => $order['status'],
+                        'price' => $order['price'],
+                        'idSeller' => $order['idSeller'],
+                        'sellerName' => $order['sellerName'],
+                        'sellerSurname' => $order['sellerSurname'],
+                        'articles' => []
+                    ];
+                }
+
+                $groupedOrders[$order['orderId']]['articles'][] = [
+                    'articleId' => $order['articleId'],
+                    'name' => $order['articleName'],
+                    'artist' => $order['articleArtist'],
+                    'price' => $order['articlePrice']
+                ];
+            }
+            
+            echo ViewHelper::render("view/orders.php", ['groupedOrders' => $groupedOrders]);
 	}
 
 	public static function add() {

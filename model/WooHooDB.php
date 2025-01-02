@@ -114,7 +114,7 @@ class WooHooDB extends AbstractDB {
                     o.price, 
                     o.idSeller, 
                     u.name AS sellerName, 
-                    u.surname AS sellerSurname,
+                    u.surname AS sellerSurname, 
                     a.id AS articleId, 
                     a.name AS articleName, 
                     a.artist AS articleArtist, 
