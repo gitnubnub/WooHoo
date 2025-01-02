@@ -6,7 +6,7 @@ USE woohoo;
 -- Table: user
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
     `surname` VARCHAR(255) NOT NULL,
     `address` VARCHAR(255),
@@ -22,7 +22,7 @@ CREATE TABLE `users` (
 -- Table: orders
 DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `status` ENUM('unprocessed', 'confirmed', 'cancelled', 'reversed') NOT NULL,
     `price` FLOAT DEFAULT 0.0,
     `idCustomer` INT NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE `orders` (
 -- Table: articles
 DROP TABLE IF EXISTS `articles`;
 CREATE TABLE `articles` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
     `description` TEXT,
     `artist` VARCHAR(255) NOT NULL,
