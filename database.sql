@@ -22,7 +22,8 @@ CREATE TABLE `users` (
 DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `status` ENUM('neobdelano', 'potrjeno', 'preklicano', 'stornirano', 'obdelano') NOT NULL,
+    `status` ENUM('unprocessed', 'confirmed', 'cancelled', 'reversed', 'processed') NOT NULL,
+    `price` FLOAT DEFAULT 0.0,
     `idCustomer` INT NOT NULL,
     `idSeller` INT NOT NULL,
     FOREIGN KEY (`idCustomer`) REFERENCES `users`(`id`),
