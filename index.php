@@ -126,6 +126,16 @@ $urls = [
 				break;
 		}
 	},
+        "/^users$/" => function ($method) {
+            switch ($method) {
+                case "POST":
+                    ProfileController::editSeller();
+                    break;
+                default:
+                    ProfileController::getSellers();
+                    break;
+            }
+        },
         #REST API
         "/^api\/records\/(\d+)$/" => function ($method, $id) {
             RecordsRESTController::get($id);

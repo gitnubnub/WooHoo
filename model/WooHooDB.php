@@ -37,6 +37,10 @@ class WooHooDB extends AbstractDB {
 			. "postalCode = :postalCode WHERE id = :id", $params);
 	}
         
+        public static function updateSeller(array $params) {
+		return parent::modify("UPDATE users SET  name = :name, surname = :surname, isActive = :isActive WHERE id = :id", $params);
+	}
+        
         public static function updatePassword(array $params) {
             return parent::modify("UPDATE users SET hash = :hash, salt = :salt WHERE id = :id", $params);
         }
@@ -82,7 +86,7 @@ class WooHooDB extends AbstractDB {
 	}
         
         public static function getUserByEmail(array $params) {
-            $records = parent::query("SELECT id, hash, salt, role FROM users WHERE email = :email", $params);
+            $records = parent::query("SELECT id, hash, salt, isActive, role FROM users WHERE email = :email", $params);
 
             if (count($records) == 1) {
                 return $records[0];
@@ -93,6 +97,10 @@ class WooHooDB extends AbstractDB {
 
 	public static function getAllRecords() {
 		return parent::query("SELECT id, name, artist, price, idSeller FROM articles WHERE isActive = TRUE");
+	}
+        
+        public static function getSellers() {
+		return parent::query("SELECT id, name, surname, isActive FROM users WHERE role = 'Seller'");
 	}
         
         public static function getAllRecordsFromSeller($sellerId) {

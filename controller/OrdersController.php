@@ -116,10 +116,6 @@ class OrdersController {
                 echo ViewHelper::redirect(BASE_URL . 'orders/' . $_SESSION['user_id']);
 	}
 
-	public static function delete($id) {
-		
-	}
-
 	public static function checkValues($input) {
 		if (empty($input)) {
 			return false;
