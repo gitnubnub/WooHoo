@@ -5,6 +5,7 @@ require_once("controller/RecordsController.php");
 require_once("controller/RecordsRESTController.php");
 require_once("controller/OrdersController.php");
 require_once("controller/ProfileController.php");
+require_once("controller/ProfileRESTController.php");
 require_once("controller/CartController.php");
 
 define("BASE_URL", rtrim($_SERVER["SCRIPT_NAME"], "index.php"));
@@ -144,17 +145,29 @@ $urls = [
                     break;
             }*/
         },
-        "/^api\/records$/" => function () {
-            RecordsRESTController::index();
-            /*switch ($method) {
+        "/^api\/records$/" => function ($method) {
+            switch ($method) {
                 case "POST":
                     RecordsRESTController::add();
                     break;
                 default: // GET
                     RecordsRESTController::index();
                     break;
-            } */
+            }
         },
+        "/^api\/login$/" => function ($method) {
+            ProfileRESTController::login();
+        },
+        "/^api\/profile\/(\d+)$/" => function ($method, $id) {
+            switch ($method) {
+                case "POST":
+                    ProfileRESTController::edit($id);
+                    break;
+                default:
+                    ProfileRESTController::get($id);
+                    break;
+            }
+	},
 	"/^.*$/" => function () {
 		echo "Unmatched path: " . $_SERVER["REQUEST_URI"];
 		exit;
