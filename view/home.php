@@ -50,7 +50,11 @@
 		<div id="content">
 			<h1>WooHoo Vinyl Store</h1>
 			<hr class="solid">
-			<p>Have a look at what our sellers have to offer and browse for your most desired titles.</p>
+                        <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Seller'): ?>
+                            <p>Here are the titles you are selling.</p>
+                        <?php else: ?>
+                            <p>Have a look at what our sellers have to offer and browse for your most desired titles.</p>
+                        <?php endif; ?>
 
 			<div class="row">
 				<?php foreach ($records as $article): ?>
@@ -76,7 +80,18 @@
                                                                         <i class="fa-solid fa-cart-shopping"></i>
                                                                     </button>
                                                                 </form>
-
+							</div>
+                                                    <?php endif; ?>
+                                                    
+                                                    <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Seller'): ?>
+							<div class="card-footer">
+                                                            <p id="cartbtn">This article is
+                                                                <?php if ($article['isActive'] == TRUE): ?>
+                                                                    active.
+                                                                <?php else: ?>
+                                                                    deactivated.
+                                                                <?php endif; ?>
+                                                            </p>
 							</div>
                                                     <?php endif; ?>
 						</div>
@@ -114,7 +129,7 @@
                                                                                 <input type="number" class="form-control" name="releaseYear" value="<?= isset($releaseYear) ? $releaseYear : '' ?>" placeholder="Year of release" required />
                                                                             </p>
                                                                             <p>
-                                                                                <input type="number" class="form-control" name="price" value="<?= isset($price) ? $price : '' ?>" placeholder="Price" required />
+                                                                                <input type="number" class="form-control" name="price" value="<?= isset($price) ? $price : '' ?>" placeholder="Price" step="0.01" required />
                                                                             </p>
                                                                     </div>
 

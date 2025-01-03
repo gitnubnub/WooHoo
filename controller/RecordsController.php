@@ -38,7 +38,12 @@ class RecordsController {
 	}
 
 	public static function delete($id) {
-		
+            $data = filter_input_array(INPUT_POST);
+            $data["id"] = $id;
+            $data["isActive"] = isset($data["isActive"]) && $data["isActive"] == true ? 0 : 1;
+            
+            WooHooDB::deactivateRecord($data);
+            ViewHelper::redirect(BASE_URL . "records/" . $id);
 	}
 
 	public static function checkValues($input) {

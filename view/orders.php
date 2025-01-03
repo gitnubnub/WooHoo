@@ -117,7 +117,31 @@
                                                                     </div>
 
                                                                     <div class="modal-footer">
+                                                                        <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Customer'): ?>
                                                                             <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                                                        <?php endif; ?>
+                                                                            
+                                                                        <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Seller'): ?>
+                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                            
+                                                                            <form action="<?= BASE_URL . "orders/" . $_SESSION['user_id'] . "/" . $order['orderId'] ?>" method="post" style="display: inline;">
+                                                                                    <input type="hidden" name="id" value="<?= $order['orderId'] ?>">
+                                                                                    <input type="hidden" name="status" value="cancelled">
+                                                                                    
+                                                                                    <button type="submit" class="btn btn-danger">
+                                                                                        Cancel order
+                                                                                    </button>                                   
+                                                                            </form>
+                                                                            
+                                                                            <form action="<?= BASE_URL . "orders/" . $_SESSION['user_id'] . "/" . $order['orderId'] ?>" method="post" style="display: inline;">
+                                                                                    <input type="hidden" name="id" value="<?= $order['orderId'] ?>">
+                                                                                    <input type="hidden" name="status" value="confirmed">
+                                                                                    
+                                                                                    <button type="submit" class="btn btn-primary">
+                                                                                        Confirm order
+                                                                                    </button>                                   
+                                                                            </form>
+                                                                        <?php endif; ?>
                                                                     </div>
                                                                 </div>
                                                         </div>
@@ -192,7 +216,22 @@
                                                                     </div>
 
                                                                     <div class="modal-footer">
-                                                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                                                            <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Customer'): ?>
+                                                                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                                                            <?php endif; ?>
+
+                                                                            <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Seller'): ?>
+                                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                                                                                <form action="<?= BASE_URL . "orders/" . $_SESSION['user_id'] . "/" . $order['orderId'] ?>" method="post" style="display: inline;">
+                                                                                        <input type="hidden" name="id" value="<?= $order['orderId'] ?>">
+                                                                                        <input type="hidden" name="status" value="reversed">
+
+                                                                                        <button type="submit" class="btn btn-danger">
+                                                                                            Reverse order
+                                                                                        </button>                                   
+                                                                                </form>
+                                                                            <?php endif; ?>
                                                                     </div>
                                                                 </div>
                                                         </div>
@@ -279,7 +318,7 @@
                             
                             <h3>Reversed orders</h3>
                             <?php foreach ($groupedOrders as $order): ?>
-                                <?php if ($order['status'] == 'reserved'): ?>
+                                <?php if ($order['status'] == 'reversed'): ?>
                                     <div class="card">
                                             <div class="article-text">
                                                     <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Customer'): ?>

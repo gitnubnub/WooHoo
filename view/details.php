@@ -90,48 +90,70 @@
 			</div>
                     
                     <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Seller'): ?>
+                           <p>This article is
+                                <?php if ($isActive == TRUE): ?>
+                                    active.
+                                <?php else: ?>
+                                    deactivated.
+                                <?php endif; ?>
+                            </p>
+                            
                             <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editDetails">
                                 <i class="fa-solid fa-pen-to-square"></i> Edit details
                             </button>
 
                             <div id="editDetails" class="modal fade" tabindex="-1" role="form" aria-labelledby="editProfile" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                                    <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                    <h5>Enter new information</h5>
-                                                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="close">
-                                                                            <span aria-hidden="true"></span>
-                                                                    </button>
-                                                            </div>
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                                <div class="modal-header">
+                                                        <h5>Enter new information</h5>
+                                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="close">
+                                                                <span aria-hidden="true"></span>
+                                                        </button>
+                                                </div>
 
-                                                            <form action="<?= BASE_URL . "records/" . $id ?>" method="post">
-                                                                    <input type="hidden" name="id" value="<?= $id ?>" />
-                                                                    <div class="modal-body">
-                                                                        <p>
-                                                                            <input type="text" class="form-control" name="name" value="<?= $name ?>" placeholder="Album title" required />
-                                                                            <input type="text" class="form-control" name="artist" value="<?= $artist ?>" placeholder="Album artist" required />
-                                                                        </p>
-                                                                        
-                                                                        <p>
-                                                                            <input type="text" class="form-control" name="description" value="<?= $description ?>" placeholder="Album description" required />
-                                                                        </p>
-                                                                        
-                                                                        <p>
-                                                                            <input type="number" class="form-control" name="releaseYear" value="<?= $releaseYear ?>" placeholder="Year of release" required />
-                                                                        </p>
-                                                                        <p>
-                                                                            <input type="number" class="form-control" name="price" value="<?= $price ?>" placeholder="Price" required />
-                                                                        </p>
-                                                                    </div>
+                                                <form action="<?= BASE_URL . "records/" . $id ?>" method="post">
+                                                        <input type="hidden" name="id" value="<?= $id ?>" />
+                                                        <div class="modal-body">
+                                                            <p>
+                                                                <input type="text" class="form-control" name="name" value="<?= $name ?>" placeholder="Album title" required />
+                                                                <input type="text" class="form-control" name="artist" value="<?= $artist ?>" placeholder="Album artist" required />
+                                                            </p>
 
-                                                                    <div class="modal-footer">
-                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                                            <button type="submit" class="btn btn-primary">Submit</button>
-                                                                    </div>
-                                                            </form>
-                                                    </div>
-                                            </div>
-                        </div>
+                                                            <p>
+                                                                <input type="text" class="form-control" name="description" value="<?= $description ?>" placeholder="Album description" required />
+                                                            </p>
+
+                                                            <p>
+                                                                <input type="number" class="form-control" name="releaseYear" value="<?= $releaseYear ?>" placeholder="Year of release" required />
+                                                            </p>
+                                                            <p>
+                                                                <input type="number" class="form-control" name="price" value="<?= $price ?>" placeholder="Price" step="0.01" required />
+                                                            </p>
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                                        </div>
+                                                </form>
+                                        </div>
+                                </div>
+                            </div>
+                    
+                            <form action="<?= BASE_URL . "records/toggle/" . $id ?>" method="post" style="display: inline;">
+                                    <input type="hidden" name="id" value="<?= $id ?>">
+                                    <input type="hidden" name="isActive" value="<?= $isActive ?>">
+                                    <?php if ($isActive == TRUE): ?>
+                                        <button type="submit" class="btn btn-primary">
+                                            Deactivate article
+                                        </button>
+                                    <?php else: ?>
+                                        <button type="submit" class="btn btn-primary">
+                                            Activate article
+                                        </button>
+                                    <?php endif; ?>                                    
+                            </form>
                     <?php endif; ?>
 		</div>
 

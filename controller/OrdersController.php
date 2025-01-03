@@ -109,15 +109,11 @@ class OrdersController {
 	}
 
 	public static function edit($id) {
-		$data = filter_input_array(INPUT_POST, self::getRules());
-
-		if (self::checkValues($data)) {
-			$data["id"] = $id;
-			WooHooDB::updateOrder($data);
-			echo ViewHelper::redirect(BASE_URL . 'orders/' . $_SESSION['user_id']);
-		} else {
-			echo ViewHelper::renderJSON("Missing data.",400);
-		}
+		$data = filter_input_array(INPUT_POST);
+                
+                $data["id"] = $id;
+                WooHooDB::updateOrder($data);
+                echo ViewHelper::redirect(BASE_URL . 'orders/' . $_SESSION['user_id']);
 	}
 
 	public static function delete($id) {

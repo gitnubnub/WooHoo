@@ -28,13 +28,13 @@ $urls = [
 			case "POST":
 				RecordsController::edit($id);
 				break;
-			case "PUT":
-				RecordsController::delete($id);
-				break;
 			default:
 				RecordsController::get($id);
 				break;
 		}
+	},
+        "/^records\/toggle\/(\d+)$/" => function ($method, $id) {
+            RecordsController::delete($id);
 	},
         "/^search$/" => function () {
             echo ViewHelper::render("view/search.php");
@@ -84,9 +84,6 @@ $urls = [
 		switch ($method) {
 			case "POST":
 				OrdersController::edit($id);
-				break;
-			case "PUT":
-				OrdersController::delete($id);
 				break;
 			default:
 				OrdersController::get($id);

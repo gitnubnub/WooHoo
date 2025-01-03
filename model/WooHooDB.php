@@ -41,8 +41,8 @@ class WooHooDB extends AbstractDB {
             return parent::modify("UPDATE users SET hash = :hash, salt = :salt WHERE id = :id", $params);
         }
 
-	public static function deleteRecord(array $id) {
-		return parent::modify("DELETE FROM articles WHERE id = :id", $id);
+	public static function deactivateRecord(array $params) {
+		return parent::modify("UPDATE articles SET isActive = :isActive WHERE id = :id", $params);
 	}
 
 	public static function deleteProfile(array $id) {
@@ -96,7 +96,7 @@ class WooHooDB extends AbstractDB {
 	}
         
         public static function getAllRecordsFromSeller($sellerId) {
-		return parent::query("SELECT id, name, artist, price, idSeller FROM articles WHERE idSeller = :idSeller AND isActive = TRUE", ["idSeller" => $sellerId]);
+		return parent::query("SELECT id, name, artist, price, idSeller, isActive FROM articles WHERE idSeller = :idSeller", ["idSeller" => $sellerId]);
 	}
         
         public static function getAllRecordswithURI(array $prefix) {
