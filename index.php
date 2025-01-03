@@ -29,13 +29,13 @@ $urls = [
 			case "POST":
 				RecordsController::edit($id);
 				break;
-			case "PUT":
-				RecordsController::delete($id);
-				break;
 			default:
 				RecordsController::get($id);
 				break;
 		}
+	},
+        "/^records\/toggle\/(\d+)$/" => function ($method, $id) {
+            RecordsController::delete($id);
 	},
         "/^search$/" => function () {
             echo ViewHelper::render("view/search.php");
@@ -86,9 +86,6 @@ $urls = [
 			case "POST":
 				OrdersController::edit($id);
 				break;
-			case "PUT":
-				OrdersController::delete($id);
-				break;
 			default:
 				OrdersController::get($id);
 				break;
@@ -130,6 +127,16 @@ $urls = [
 				break;
 		}
 	},
+        "/^users$/" => function ($method) {
+            switch ($method) {
+                case "POST":
+                    ProfileController::editSeller();
+                    break;
+                default:
+                    ProfileController::getSellers();
+                    break;
+            }
+        },
         #REST API
         "/^api\/records\/(\d+)$/" => function ($method, $id) {
             RecordsRESTController::get($id);

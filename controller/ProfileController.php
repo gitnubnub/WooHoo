@@ -7,6 +7,10 @@ class ProfileController {
 	public static function get($id) {
 		echo ViewHelper::render("view/profile.php", WooHooDB::getProfile(["id" => $id]));
 	}
+        
+        public static function getSellers() {
+		echo ViewHelper::render("view/users.php", ["sellers" => WooHooDB::getSellers()]);
+	}
 
 	public static function index() {
             echo ViewHelper::render("view/login_register.php");
@@ -60,13 +64,21 @@ class ProfileController {
 		}
 	}
         
+        public static function editSeller() {
+		$data = filter_input_array(INPUT_POST);
+                $data['isActive'] = isset($_POST['isActive']) ? 1 : 0;
+
+                WooHooDB::updateSeller($data);
+                ViewHelper::redirect(BASE_URL . "users");
+	}
+        
         public static function login() {
             $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
             $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
 
             $user = WooHooDB::getUserByEmail(['email' => $email]);
 
-            if ($user) {
+            if ($user && $user['isActive'] == true) {
                 $hashedPassword = $user['hash'];
                 $salt = $user['salt'];
 
@@ -88,10 +100,6 @@ class ProfileController {
             session_destroy();
             ViewHelper::redirect(BASE_URL);
         }
-
-	public static function delete($id) {
-		
-	}
 
 	public static function checkValues($input) {
 		if (empty($input)) {

@@ -24,8 +24,8 @@ class WooHooDB extends AbstractDB {
         }
 
 	public static function updateRecord(array $params) {
-		return parent::modify("UPDATE articles SET name = :name, description = :description, artist = :artist, releaseYear = :releaseYear, "
-			. "rating = :rating, numberOfRatings = :numberOfRatings, price = :price WHERE id = :id", $params);
+		return parent::modify("UPDATE articles SET name = :name, artist = :artist, description = :description, releaseYear = :releaseYear, "
+			. "price = :price WHERE id = :id", $params);
 	}
 
 	public static function updateOrder(array $params) {
@@ -37,12 +37,16 @@ class WooHooDB extends AbstractDB {
 			. "postalCode = :postalCode WHERE id = :id", $params);
 	}
         
+        public static function updateSeller(array $params) {
+		return parent::modify("UPDATE users SET  name = :name, surname = :surname, isActive = :isActive WHERE id = :id", $params);
+	}
+        
         public static function updatePassword(array $params) {
             return parent::modify("UPDATE users SET hash = :hash, salt = :salt WHERE id = :id", $params);
         }
 
-	public static function deleteRecord(array $id) {
-		return parent::modify("DELETE FROM articles WHERE id = :id", $id);
+	public static function deactivateRecord(array $params) {
+		return parent::modify("UPDATE articles SET isActive = :isActive WHERE id = :id", $params);
 	}
 
 	public static function deleteProfile(array $id) {
@@ -82,7 +86,7 @@ class WooHooDB extends AbstractDB {
 	}
         
         public static function getUserByEmail(array $params) {
-            $records = parent::query("SELECT id, hash, salt, role FROM users WHERE email = :email", $params);
+            $records = parent::query("SELECT id, hash, salt, isActive, role FROM users WHERE email = :email", $params);
 
             if (count($records) == 1) {
                 return $records[0];
@@ -92,11 +96,15 @@ class WooHooDB extends AbstractDB {
         }
 
 	public static function getAllRecords() {
-		return parent::query("SELECT id, name, artist, price, idSeller FROM articles");
+		return parent::query("SELECT id, name, artist, price, idSeller FROM articles WHERE isActive = TRUE");
+	}
+        
+        public static function getSellers() {
+		return parent::query("SELECT id, name, surname, isActive FROM users WHERE role = 'Seller'");
 	}
         
         public static function getAllRecordsFromSeller($sellerId) {
-		return parent::query("SELECT id, name, artist, price, idSeller FROM articles WHERE idSeller = :idSeller", $sellerId);
+		return parent::query("SELECT id, name, artist, price, idSeller, isActive FROM articles WHERE idSeller = :idSeller", ["idSeller" => $sellerId]);
 	}
         
         public static function getAllRecordswithURI(array $prefix) {
@@ -129,6 +137,27 @@ class WooHooDB extends AbstractDB {
         }
         
         public static function getAllOrdered($userId) {
-		return parent::query("SELECT id, status FROM articles WHERE idSeller = :idSeller", $userId);
+		return parent::query(
+                    "SELECT 
+                        o.id AS orderId, 
+                        o.status, 
+                        o.price,
+                        c.name AS customerName, 
+                        c.surname AS customerSurname, 
+                        c.address AS customerStreet, 
+                        c.addressNumber AS customerNumber, 
+                        c.postalCode AS customerPost, 
+                        a.id AS articleId, 
+                        a.name AS articleName, 
+                        a.artist AS articleArtist, 
+                        a.price AS articlePrice
+                     FROM orders o
+                     JOIN users s ON o.idSeller = s.id
+                     JOIN users c ON o.idCustomer = c.id
+                     LEFT JOIN ordersArticles oa ON o.id = oa.idOrder
+                     LEFT JOIN articles a ON oa.idArticle = a.id
+                     WHERE o.idSeller = :idSeller",
+                    ["idSeller" => $userId]
+                );
 	}
 }

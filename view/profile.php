@@ -25,16 +25,31 @@
 						<i class="fa-solid fa-magnifying-glass"></i>
 					</a>
 				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="<?= BASE_URL . "cart" ?>">
-						<i class="fa-solid fa-cart-shopping"></i>
-					</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="<?= BASE_URL . "orders" ?>">
-						<i class="fa-solid fa-file-invoice"></i>
-					</a>
-				</li>
+				
+                                <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Customer'): ?>
+                                    <li class="nav-item">
+                                            <a class="nav-link" href="<?= BASE_URL . "cart" ?>">
+                                                    <i class="fa-solid fa-cart-shopping"></i>
+                                            </a>
+                                    </li>
+                                <?php endif; ?>
+                                    
+				<?php if (!isset($_SESSION['role']) || $_SESSION['role'] != 'Admin'): ?>
+                                    <li class="nav-item">
+                                            <a class="nav-link" href="<?= BASE_URL . "orders" ?>">
+                                                    <i class="fa-solid fa-file-invoice"></i>
+                                            </a>
+                                    </li>
+                                <?php endif; ?>
+                                    
+                                <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Admin'): ?>
+                                    <li class="nav-item">
+                                            <a class="nav-link" href="<?= BASE_URL . "users" ?>">
+                                                    <i class="fa-solid fa-users"></i>
+                                            </a>
+                                    </li>
+                                <?php endif; ?>
+                                    
 				<li class="nav-item">
 					<a class="nav-link" href="<?= BASE_URL . "profile" ?>">
 						<i class="fa-solid fa-user"></i>
@@ -53,8 +68,10 @@
 			<h3>Name and surname</h3>
 			<p><?= $name ?> <?= $surname ?></p>
 
-			<h3>Address</h3>
-			<p><?= $address ?> <?= $addressNumber ?>, <?= $postalCode ?></p>
+                        <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Customer'): ?>
+                            <h3>Address</h3>
+                            <p><?= $address ?> <?= $addressNumber ?>, <?= $postalCode ?></p>
+                        <?php endif; ?>
                         
                         <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editProfile">
                             <i class="fa-solid fa-pen-to-square"></i> Edit profile

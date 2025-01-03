@@ -19,6 +19,7 @@ class RecordsController {
 	public static function add() {
 		$idSeller = $_SESSION['user_id'];
 		$data = filter_input_array(INPUT_POST, self::getRules());
+                $data['idSeller'] = $idSeller;
 
 		if (self::checkValues($data)) {
 			$id = WooHooDB::insertRecord($data);
@@ -32,12 +33,17 @@ class RecordsController {
 		if (self::checkValues($data)) {
 			$data["id"] = $id;
 			WooHooDB::updateRecord($data);
-			echo ViewHelper::render("view/details.php", WooHooDB::getRecord(["id" => $id]));
+			ViewHelper::redirect(BASE_URL . "records/" . $id);
 		}
 	}
 
 	public static function delete($id) {
-		
+            $data = filter_input_array(INPUT_POST);
+            $data["id"] = $id;
+            $data["isActive"] = isset($data["isActive"]) && $data["isActive"] == true ? 0 : 1;
+            
+            WooHooDB::deactivateRecord($data);
+            ViewHelper::redirect(BASE_URL . "records/" . $id);
 	}
 
 	public static function checkValues($input) {
@@ -65,8 +71,6 @@ class RecordsController {
 					'max_range' => date("Y")
 				]
 			],
-			'rating' => FILTER_VALIDATE_FLOAT,
-			'numberOfRatings' => FILTER_VALIDATE_INT,
 			'price' => FILTER_VALIDATE_FLOAT
 		];
 	}

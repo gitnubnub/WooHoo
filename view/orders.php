@@ -25,16 +25,31 @@
 						<i class="fa-solid fa-magnifying-glass"></i>
 					</a>
 				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="<?= BASE_URL . "cart" ?>">
-						<i class="fa-solid fa-cart-shopping"></i>
-					</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="<?= BASE_URL . "orders" ?>">
-						<i class="fa-solid fa-file-invoice"></i>
-					</a>
-				</li>
+                                
+				<?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Customer'): ?>
+                                    <li class="nav-item">
+                                            <a class="nav-link" href="<?= BASE_URL . "cart" ?>">
+                                                    <i class="fa-solid fa-cart-shopping"></i>
+                                            </a>
+                                    </li>
+                                <?php endif; ?>
+                                    
+                                <?php if (!isset($_SESSION['role']) || $_SESSION['role'] != 'Admin'): ?>
+                                    <li class="nav-item">
+                                            <a class="nav-link" href="<?= BASE_URL . "orders" ?>">
+                                                    <i class="fa-solid fa-file-invoice"></i>
+                                            </a>
+                                    </li>
+                                <?php endif; ?>
+                                        
+                                <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Admin'): ?>
+                                    <li class="nav-item">
+                                            <a class="nav-link" href="<?= BASE_URL . "users" ?>">
+                                                    <i class="fa-solid fa-users"></i>
+                                            </a>
+                                    </li>
+                                <?php endif; ?>
+                                    
 				<li class="nav-item">
 					<a class="nav-link" href="<?= BASE_URL . "profile" ?>">
 						<i class="fa-solid fa-user"></i>
@@ -48,12 +63,21 @@
 			<hr class="solid">
 			
                         <?php if (!empty($groupedOrders)): ?>
+                            <h3>Unprocessed orders</h3>
                             <?php foreach ($groupedOrders as $order): ?>
+                                <?php if ($order['status'] == 'unprocessed'): ?>
                                     <div class="card">
                                             <div class="article-text">
-                                                    <h6>From: <?= $order["sellerName"] ?> <?= $order["sellerSurname"] ?></h6>
+                                                    <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Customer'): ?>
+                                                        <h6>From: <?= $order["sellerName"] ?> <?= $order["sellerSurname"] ?></h6>
+                                                    <?php endif; ?>
+
+                                                    <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Seller'): ?>
+                                                        <h6>From: <?= $order["customerName"] ?> <?= $order["customerSurname"] ?></h6>
+                                                    <?php endif; ?>
+                                                
                                                     <p>Status: <?= $order["status"] ?></p>
-                                                    <p id="price"><?= $order["price"] ?></p>
+                                                    <p id="price"><?= $order["price"] ?> €</p>
                                             </div>
 
                                             <div class="card-footer">
@@ -72,8 +96,16 @@
                                                                     </div>
                                                                     
                                                                     <div class="modal-body">
-                                                                        <h5>Seller:</h5>
-                                                                        <p><?= $order["sellerName"] ?> <?= $order["sellerSurname"] ?></p>
+                                                                        <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Customer'): ?>
+                                                                            <h5>Seller:</h5>
+                                                                            <p><?= $order["sellerName"] ?> <?= $order["sellerSurname"] ?></p>
+                                                                        <?php endif; ?>
+                                                                        
+                                                                        <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Seller'): ?>
+                                                                            <h5>Customer:</h5>
+                                                                            <p><?= $order["customerName"] ?> <?= $order["customerSurname"] ?></p>
+                                                                            <p><?= $order["customerStreet"] ?> <?= $order["customerNumber"] ?>, <?= $order["customerPost"] ?></p>
+                                                                        <?php endif; ?>
                                                                         
                                                                         <h5>Status:</h5>
                                                                         <p><?= $order["status"] ?></p>
@@ -83,7 +115,7 @@
                                                                             <ul>
                                                                                 <?php foreach ($order["articles"] as $article): ?>
                                                                                     <li>
-                                                                                        <?= $article["name"] ?> by <?= $article["artist"] ?> - <?= $article["price"] ?> €
+                                                                                        <b><?= $article["name"] ?></b> by <b><?= $article["artist"] ?></b> - <?= $article["price"] ?> €
                                                                                     </li>
                                                                                 <?php endforeach; ?>
                                                                             </ul>
@@ -92,7 +124,196 @@
                                                                         <?php endif; ?>
                                                                         
                                                                         <h5>Total price:</h5>
-                                                                        <p><?= $order["price"] ?></p>
+                                                                        <p><?= $order["price"] ?> €</p>
+                                                                    </div>
+
+                                                                    <div class="modal-footer">
+                                                                        <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Customer'): ?>
+                                                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                                                        <?php endif; ?>
+                                                                            
+                                                                        <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Seller'): ?>
+                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                            
+                                                                            <form action="<?= BASE_URL . "orders/" . $_SESSION['user_id'] . "/" . $order['orderId'] ?>" method="post" style="display: inline;">
+                                                                                    <input type="hidden" name="id" value="<?= $order['orderId'] ?>">
+                                                                                    <input type="hidden" name="status" value="cancelled">
+                                                                                    
+                                                                                    <button type="submit" class="btn btn-danger">
+                                                                                        Cancel order
+                                                                                    </button>                                   
+                                                                            </form>
+                                                                            
+                                                                            <form action="<?= BASE_URL . "orders/" . $_SESSION['user_id'] . "/" . $order['orderId'] ?>" method="post" style="display: inline;">
+                                                                                    <input type="hidden" name="id" value="<?= $order['orderId'] ?>">
+                                                                                    <input type="hidden" name="status" value="confirmed">
+                                                                                    
+                                                                                    <button type="submit" class="btn btn-primary">
+                                                                                        Confirm order
+                                                                                    </button>                                   
+                                                                            </form>
+                                                                        <?php endif; ?>
+                                                                    </div>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                            </div>
+                                    </div>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                            
+                            <h3>Confirmed orders</h3>
+                            <?php foreach ($groupedOrders as $order): ?>
+                                <?php if ($order['status'] == 'confirmed'): ?>
+                                    <div class="card">
+                                            <div class="article-text">
+                                                    <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Customer'): ?>
+                                                        <h6>From: <?= $order["sellerName"] ?> <?= $order["sellerSurname"] ?></h6>
+                                                    <?php endif; ?>
+
+                                                    <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Seller'): ?>
+                                                        <h6>From: <?= $order["customerName"] ?> <?= $order["customerSurname"] ?></h6>
+                                                    <?php endif; ?>
+                                                    
+                                                    <p>Status: <?= $order["status"] ?></p>
+                                                    <p id="price"><?= $order["price"] ?> €</p>
+                                            </div>
+
+                                            <div class="card-footer">
+                                                <button id="cartbtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewDetails<?= $order['orderId'] ?>">
+                                                    View details
+                                                </button>
+
+                                                <div id="viewDetails<?= $order['orderId'] ?>" class="modal fade" tabindex="-1" aria-labelledby="viewDetails" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                            <h4>Order details</h4>
+                                                                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="close">
+                                                                                    <span aria-hidden="true"></span>
+                                                                            </button>
+                                                                    </div>
+                                                                    
+                                                                    <div class="modal-body">
+                                                                        <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Customer'): ?>
+                                                                            <h5>Seller:</h5>
+                                                                            <p><?= $order["sellerName"] ?> <?= $order["sellerSurname"] ?></p>
+                                                                        <?php endif; ?>
+                                                                        
+                                                                        <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Seller'): ?>
+                                                                            <h5>Customer:</h5>
+                                                                            <p><?= $order["customerName"] ?> <?= $order["customerSurname"] ?></p>
+                                                                            <p><?= $order["customerStreet"] ?> <?= $order["customerNumber"] ?>, <?= $order["customerPost"] ?></p>
+                                                                        <?php endif; ?>
+                                                                        
+                                                                        <h5>Status:</h5>
+                                                                        <p><?= $order["status"] ?></p>
+                                                                        
+                                                                        <h5>Articles:</h5>
+                                                                        <?php if (!empty($order["articles"])): ?>
+                                                                            <ul>
+                                                                                <?php foreach ($order["articles"] as $article): ?>
+                                                                                    <li>
+                                                                                        <b><?= $article["name"] ?></b> by <b><?= $article["artist"] ?></b> - <?= $article["price"] ?> €
+                                                                                    </li>
+                                                                                <?php endforeach; ?>
+                                                                            </ul>
+                                                                        <?php else: ?>
+                                                                            <p>No articles in this order.</p>
+                                                                        <?php endif; ?>
+                                                                        
+                                                                        <h5>Total price:</h5>
+                                                                        <p><?= $order["price"] ?> €</p>
+                                                                    </div>
+
+                                                                    <div class="modal-footer">
+                                                                            <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Customer'): ?>
+                                                                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                                                            <?php endif; ?>
+
+                                                                            <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Seller'): ?>
+                                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                                                                                <form action="<?= BASE_URL . "orders/" . $_SESSION['user_id'] . "/" . $order['orderId'] ?>" method="post" style="display: inline;">
+                                                                                        <input type="hidden" name="id" value="<?= $order['orderId'] ?>">
+                                                                                        <input type="hidden" name="status" value="reversed">
+
+                                                                                        <button type="submit" class="btn btn-danger">
+                                                                                            Reverse order
+                                                                                        </button>                                   
+                                                                                </form>
+                                                                            <?php endif; ?>
+                                                                    </div>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                            </div>
+                                    </div>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                            
+                            <h3>Cancelled orders</h3>
+                            <?php foreach ($groupedOrders as $order): ?>
+                                <?php if ($order['status'] == 'cancelled'): ?>
+                                    <div class="card">
+                                            <div class="article-text">
+                                                    <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Customer'): ?>
+                                                        <h6>From: <?= $order["sellerName"] ?> <?= $order["sellerSurname"] ?></h6>
+                                                    <?php endif; ?>
+
+                                                    <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Seller'): ?>
+                                                        <h6>From: <?= $order["customerName"] ?> <?= $order["customerSurname"] ?></h6>
+                                                    <?php endif; ?>
+                                                    
+                                                    <p>Status: <?= $order["status"] ?></p>
+                                                    <p id="price"><?= $order["price"] ?> €</p>
+                                            </div>
+
+                                            <div class="card-footer">
+                                                <button id="cartbtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewDetails<?= $order['orderId'] ?>">
+                                                    View details
+                                                </button>
+
+                                                <div id="viewDetails<?= $order['orderId'] ?>" class="modal fade" tabindex="-1" aria-labelledby="viewDetails" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                            <h4>Order details</h4>
+                                                                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="close">
+                                                                                    <span aria-hidden="true"></span>
+                                                                            </button>
+                                                                    </div>
+                                                                    
+                                                                    <div class="modal-body">
+                                                                        <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Customer'): ?>
+                                                                            <h5>Seller:</h5>
+                                                                            <p><?= $order["sellerName"] ?> <?= $order["sellerSurname"] ?></p>
+                                                                        <?php endif; ?>
+                                                                        
+                                                                        <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Seller'): ?>
+                                                                            <h5>Customer:</h5>
+                                                                            <p><?= $order["customerName"] ?> <?= $order["customerSurname"] ?></p>
+                                                                            <p><?= $order["customerStreet"] ?> <?= $order["customerNumber"] ?>, <?= $order["customerPost"] ?></p>
+                                                                        <?php endif; ?>
+                                                                        
+                                                                        <h5>Status:</h5>
+                                                                        <p><?= $order["status"] ?></p>
+                                                                        
+                                                                        <h5>Articles:</h5>
+                                                                        <?php if (!empty($order["articles"])): ?>
+                                                                            <ul>
+                                                                                <?php foreach ($order["articles"] as $article): ?>
+                                                                                    <li>
+                                                                                        <b><?= $article["name"] ?></b> by <b><?= $article["artist"] ?></b> - <?= $article["price"] ?> €
+                                                                                    </li>
+                                                                                <?php endforeach; ?>
+                                                                            </ul>
+                                                                        <?php else: ?>
+                                                                            <p>No articles in this order.</p>
+                                                                        <?php endif; ?>
+                                                                        
+                                                                        <h5>Total price:</h5>
+                                                                        <p><?= $order["price"] ?> €</p>
                                                                     </div>
 
                                                                     <div class="modal-footer">
@@ -103,6 +324,82 @@
                                                 </div>
                                             </div>
                                     </div>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                            
+                            <h3>Reversed orders</h3>
+                            <?php foreach ($groupedOrders as $order): ?>
+                                <?php if ($order['status'] == 'reversed'): ?>
+                                    <div class="card">
+                                            <div class="article-text">
+                                                    <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Customer'): ?>
+                                                        <h6>From: <?= $order["sellerName"] ?> <?= $order["sellerSurname"] ?></h6>
+                                                    <?php endif; ?>
+
+                                                    <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Seller'): ?>
+                                                        <h6>From: <?= $order["customerName"] ?> <?= $order["customerSurname"] ?></h6>
+                                                    <?php endif; ?>
+                                                
+                                                    <p>Status: <?= $order["status"] ?></p>
+                                                    <p id="price"><?= $order["price"] ?> €</p>
+                                            </div>
+
+                                            <div class="card-footer">
+                                                <button id="cartbtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewDetails<?= $order['orderId'] ?>">
+                                                    View details
+                                                </button>
+
+                                                <div id="viewDetails<?= $order['orderId'] ?>" class="modal fade" tabindex="-1" aria-labelledby="viewDetails" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                            <h4>Order details</h4>
+                                                                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="close">
+                                                                                    <span aria-hidden="true"></span>
+                                                                            </button>
+                                                                    </div>
+                                                                    
+                                                                    <div class="modal-body">
+                                                                        <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Customer'): ?>
+                                                                            <h5>Seller:</h5>
+                                                                            <p><?= $order["sellerName"] ?> <?= $order["sellerSurname"] ?></p>
+                                                                        <?php endif; ?>
+                                                                        
+                                                                        <?php if (!isset($_SESSION['role']) || $_SESSION['role'] == 'Seller'): ?>
+                                                                            <h5>Customer:</h5>
+                                                                            <p><?= $order["customerName"] ?> <?= $order["customerSurname"] ?></p>
+                                                                            <p><?= $order["customerStreet"] ?> <?= $order["customerNumber"] ?>, <?= $order["customerPost"] ?></p>
+                                                                        <?php endif; ?>
+                                                                        
+                                                                        <h5>Status:</h5>
+                                                                        <p><?= $order["status"] ?></p>
+                                                                        
+                                                                        <h5>Articles:</h5>
+                                                                        <?php if (!empty($order["articles"])): ?>
+                                                                            <ul>
+                                                                                <?php foreach ($order["articles"] as $article): ?>
+                                                                                    <li>
+                                                                                        <b><?= $article["name"] ?></b> by <b><?= $article["artist"] ?></b> - <?= $article["price"] ?> €
+                                                                                    </li>
+                                                                                <?php endforeach; ?>
+                                                                            </ul>
+                                                                        <?php else: ?>
+                                                                            <p>No articles in this order.</p>
+                                                                        <?php endif; ?>
+                                                                        
+                                                                        <h5>Total price:</h5>
+                                                                        <p><?= $order["price"] ?> €</p>
+                                                                    </div>
+
+                                                                    <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                                                    </div>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                            </div>
+                                    </div>
+                                <?php endif; ?>
                             <?php endforeach; ?>
                         
                         <?php else: ?>
