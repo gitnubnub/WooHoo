@@ -107,11 +107,18 @@ class ProfileController {
                 $salt = $user['salt'];
 
                 if (password_verify($salt . $password, $hashedPassword)) {
-                    $_SESSION['user_id'] = $user['id'];
-                    $_SESSION['role'] = $user['role'];
-                    $_SESSION["cart"] = [];
+                    
+                    /* if ($user['role'] != 'Customer') {
+                        $_SESSION['login_email'] = $email;
+                        $_SESSION['login_role'] = $user['role'];
+                        echo ViewHelper::render("view/logcert/login_certificate.php");                       
+                    } else { */
+                        $_SESSION['user_id'] = $user['id'];
+                        $_SESSION['role'] = $user['role'];
+                        $_SESSION["cart"] = [];
 
-                    echo ViewHelper::redirect(BASE_URL . "profile/" . $user['id']);
+                        echo ViewHelper::redirect(BASE_URL . "profile/" . $user['id']);    
+                    // }
                 } else {
                     echo ViewHelper::render("view/login_register.php", ["error" => "Invalid email or password."]);
                 }
