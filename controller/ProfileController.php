@@ -17,22 +17,43 @@ class ProfileController {
 	}
         
         public static function add() {
-            $data = filter_input_array(INPUT_POST, self::getRules());
+            if (isset($_SESSION['role']) && isset($_SESSION['user_id']) && $_SESSION['role'] == 'Admin') {
+                $data = filter_input_array(INPUT_POST);
 
-            if (self::checkValues($data)) {
                 $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
                 $salt = bin2hex(random_bytes(16));
                 $hash = password_hash($salt . $password, PASSWORD_DEFAULT);
 
+                $data['email'] = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+                $data['name'] = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
+                $data['surname'] = filter_input(INPUT_POST, 'surname', FILTER_SANITIZE_SPECIAL_CHARS);
                 $data['hash'] = $hash;
                 $data['salt'] = $salt;
-                $data['role'] = 'Customer';
+                $data['role'] = 'Seller';
+                $data['address'] = 'NULL';
+                $data['addressNumber'] = 'NULL';
+                $data['postalCode'] = 'NULL';
 
                 $id = WooHooDB::insertProfile($data);
-                $_SESSION['user_id'] = $id;
-                $_SESSION['role'] = $data['role'];
-                $_SESSION["cart"] = [];
-                echo ViewHelper::redirect(BASE_URL . "profile/" . $id);
+                echo ViewHelper::redirect(BASE_URL . "users");
+            } else {
+                $data = filter_input_array(INPUT_POST, self::getRules());
+
+                if (self::checkValues($data)) {
+                    $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
+                    $salt = bin2hex(random_bytes(16));
+                    $hash = password_hash($salt . $password, PASSWORD_DEFAULT);
+
+                    $data['hash'] = $hash;
+                    $data['salt'] = $salt;
+                    $data['role'] = 'Customer';
+
+                    $id = WooHooDB::insertProfile($data);
+                    $_SESSION['user_id'] = $id;
+                    $_SESSION['role'] = $data['role'];
+                    $_SESSION["cart"] = [];
+                    echo ViewHelper::redirect(BASE_URL . "profile/" . $id);
+                }
             }
         }
         
@@ -66,6 +87,9 @@ class ProfileController {
         
         public static function editSeller() {
 		$data = filter_input_array(INPUT_POST);
+                $data['name'] = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
+                $data['surname'] = filter_input(INPUT_POST, 'surname', FILTER_SANITIZE_SPECIAL_CHARS);
+
                 $data['isActive'] = isset($_POST['isActive']) ? 1 : 0;
 
                 WooHooDB::updateSeller($data);
