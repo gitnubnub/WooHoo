@@ -4,9 +4,11 @@ session_start();
 require_once("controller/RecordsController.php");
 require_once("controller/RecordsRESTController.php");
 require_once("controller/OrdersController.php");
+require_once("controller/OrdersRESTController.php");
 require_once("controller/ProfileController.php");
 require_once("controller/ProfileRESTController.php");
 require_once("controller/CartController.php");
+require_once("controller/CartRESTController.php");
 
 define("BASE_URL", rtrim($_SERVER["SCRIPT_NAME"], "index.php"));
 define("CSS_URL", rtrim($_SERVER["SCRIPT_NAME"], "index.php") . "static/");
@@ -140,17 +142,6 @@ $urls = [
         #REST API
         "/^api\/records\/(\d+)$/" => function ($method, $id) {
             RecordsRESTController::get($id);
-            /*switch ($method) {
-                case "PUT":
-                    RecordsRESTController::edit($id);
-                    break;
-                case "DELETE":
-                    RecordsRESTController::delete($id);
-                    break;
-                default: # GET
-                    RecordsRESTController::get($id);
-                    break;
-            }*/
         },
         "/^api\/records$/" => function ($method) {
             switch ($method) {
@@ -174,6 +165,19 @@ $urls = [
                     ProfileRESTController::get($id);
                     break;
             }
+	},
+        "/^api\/orders\/(\d+)$/"=> function ($method, $userId) {
+            switch ($method) {
+                case "POST":
+                    OrdersRESTController::add();
+                    break;
+                default:
+                    OrdersRESTController::index($userId);
+                    break;
+            }
+	},
+        "/^api\/orders\/(\d+)\/(\d+)$/" => function ($method, $userId, $id) {
+            OrdersRESTController::get($userId, $id);
 	},
 	"/^.*$/" => function () {
 		echo "Unmatched path: " . $_SERVER["REQUEST_URI"];

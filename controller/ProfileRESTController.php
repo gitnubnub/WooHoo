@@ -29,13 +29,25 @@ class ProfileRESTController {
     }
     
     public static function edit($id) {
-        $data = filter_input_array(INPUT_POST, self::getRules());
-
-        if (self::checkValues($data)) {
-                $data["id"] = $id;
-                WooHooDB::updateProfile($data);
-                echo ViewHelper::renderJSON(WooHooDB::getProfile(["id" => $id]));
-        }
+        $name = filter_input(INPUT_POST, 'name');
+        $surname = filter_input(INPUT_POST, 'surname');
+        $address = filter_input(INPUT_POST, 'address');
+        $addressNumber = filter_input(INPUT_POST, 'addressNumber');
+        $postalCode = filter_input(INPUT_POST, 'postalCode');
+        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+        
+        $params = [
+            'id' => $id,
+            'email' => $email,
+            'name' => $name,
+            'surname' => $surname,
+            'address' => $address,
+            'addressNumber' => $addressNumber,
+            'postalCode' => $postalCode
+];
+            
+        WooHooDB::updateProfile($params);
+        echo ViewHelper::renderJSON(WooHooDB::getProfile(["id" => $id]));   
     }
 
     public static function get($id) {
