@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Orders</title>
+		<title>Sellers</title>
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 		<link rel="stylesheet" type="text/css" href="<?= CSS_URL . "styles.css" ?>"/>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
@@ -100,6 +100,7 @@
                                                                                         <input type="text" class="form-control" name="surname" value="<?= htmlspecialchars($seller['surname']) ?>" placeholder="Last name" required />
                                                                                     </p>
                                                                                     <p>
+                                                                                        <label class="form-label">Active </label>
                                                                                         <input type="checkbox" name="isActive" value="<?= $seller['isActive'] ?>" <?php if ($seller['isActive'] == TRUE): ?> checked <?php endif; ?> />
                                                                                     </p>
                                                                             </div>
@@ -116,6 +117,42 @@
                                     </div>
                             <?php endforeach; ?>
                         <?php endif; ?>
+                        
+                        <button id="addbtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSeller">
+                                <i class="fa-solid fa-plus"></i>
+                        </button>
+
+                        <div id="addSeller" class="modal fade" tabindex="-1" role="form" aria-labelledby="addSeller" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                                <div class="modal-header">
+                                                        <h5>Enter information about the seller</h5>
+                                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="close">
+                                                                <span aria-hidden="true"></span>
+                                                        </button>
+                                                </div>
+
+                                            <form action="<?= BASE_URL . "profile" ?>" method="post">
+							<div class="modal-body">
+								<label class="form-label">E-mail</label><br>
+								<input type="email" class="form-control" name="email" value="<?= isset($email) ? $email : '' ?>" placeholder="" required /><br>
+							
+								<label class="form-label">Password</label><br>
+								<input type="password" class="form-control" name="password" value="<?= isset($password) ? $password : '' ?>" placeholder="" required /><br>
+
+								<label class="form-label">Full name</label>
+								<input type="text" class="form-control" name="name" value="<?= isset($name) ? $name : '' ?>" placeholder="First name" required />
+								<input type="text" class="form-control" name="surname" value="<?= isset($surname) ? $surname : '' ?>" placeholder="Last name" required /><br>
+                                                        </div>
+							
+                                                        <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                                        </div>
+                                                </form>
+                                        </div>
+                                </div>
+                        </div>
 		</div>
 
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
