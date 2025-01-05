@@ -38,21 +38,25 @@ class ProfileController {
                 echo ViewHelper::redirect(BASE_URL . "users");
             } else {
                 $data = filter_input_array(INPUT_POST, self::getRules());
+                        
+                if ($_POST['captcha'] == $_SESSION['captcha_text']) {
+                    if (self::checkValues($data)) {
+                        $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
+                        $salt = bin2hex(random_bytes(16));
+                        $hash = password_hash($salt . $password, PASSWORD_DEFAULT);
 
-                if (self::checkValues($data)) {
-                    $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
-                    $salt = bin2hex(random_bytes(16));
-                    $hash = password_hash($salt . $password, PASSWORD_DEFAULT);
+                        $data['hash'] = $hash;
+                        $data['salt'] = $salt;
+                        $data['role'] = 'Customer';
 
-                    $data['hash'] = $hash;
-                    $data['salt'] = $salt;
-                    $data['role'] = 'Customer';
-
-                    $id = WooHooDB::insertProfile($data);
-                    $_SESSION['user_id'] = $id;
-                    $_SESSION['role'] = $data['role'];
-                    $_SESSION["cart"] = [];
-                    echo ViewHelper::redirect(BASE_URL . "profile/" . $id);
+                        $id = WooHooDB::insertProfile($data);
+                        $_SESSION['user_id'] = $id;
+                        $_SESSION['role'] = $data['role'];
+                        $_SESSION["cart"] = [];
+                        echo ViewHelper::redirect(BASE_URL . "profile/" . $id);
+                    }
+                } else {
+                    echo "Incorrect captcha, required:" . $_SESSION['captcha_text'] . "got:" . $_POST['captcha'];
                 }
             }
         }
