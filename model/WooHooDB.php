@@ -27,6 +27,10 @@ class WooHooDB extends AbstractDB {
 		return parent::modify("UPDATE articles SET name = :name, artist = :artist, description = :description, releaseYear = :releaseYear, "
 			. "price = :price WHERE id = :id", $params);
 	}
+        
+        public static function updateRating(array $params) {
+		return parent::modify("UPDATE articles SET rating = :rating, numberOfRatings = :numberOfRatings WHERE id = :id", $params);
+	}
 
 	public static function updateOrder(array $params) {
 		return parent::modify("UPDATE orders SET status = :status WHERE id = :id", $params);
@@ -160,4 +164,14 @@ class WooHooDB extends AbstractDB {
                     ["idSeller" => $userId]
                 );
 	}
+        
+        public static function searchRecords($searchTerm) {
+            return parent::query(
+                "SELECT id, name, artist, price, idSeller 
+                 FROM articles 
+                 WHERE isActive = TRUE 
+                 AND MATCH(name, artist, description) AGAINST (:searchTerm IN BOOLEAN MODE)", 
+                ["searchTerm" => $searchTerm]
+            );
+        }
 }

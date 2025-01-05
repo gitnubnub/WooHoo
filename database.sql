@@ -44,7 +44,8 @@ CREATE TABLE `articles` (
     `price` FLOAT NOT NULL,
     `isActive` BOOLEAN DEFAULT TRUE,
     `idSeller` INT NOT NULL,
-    FOREIGN KEY (`idSeller`) REFERENCES `users`(`id`)
+    FOREIGN KEY (`idSeller`) REFERENCES `users`(`id`),
+    FULLTEXT (`name`, `artist`, `description`)
 );
 
 -- Table: ordersArticles

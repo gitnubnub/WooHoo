@@ -75,11 +75,13 @@
 								<?= $rating ?> average based on <?= $numberOfRatings ?> reviews.
 							</p>
 			
-							<span class="fa fa-star checked"></span>
-							<span class="fa fa-star checked"></span>
-							<span class="fa fa-star checked"></span>
-							<span class="fa fa-star checked"></span>
-							<span class="fa fa-star"></span>
+                                                        <?php for ($i = 1; $i < 6; $i++): ?>
+                                                            <?php if ($i <= round($rating, 0)): ?>
+                                                                <span class="fa fa-star checked"></span>
+                                                            <?php else: ?>
+                                                                <span class="fa fa-star"></span>
+                                                            <?php endif; ?>
+                                                        <?php endfor; ?>
 						</div>
                                                 
                                             <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Customer'): ?>
@@ -99,6 +101,49 @@
 					</div>
 				</div>
 			</div>
+                    
+                    <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Customer'): ?>
+                        <button id="cartbtn" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rateArticle">
+                                Rate this article
+                            </button>
+
+                            <div id=rateArticle class="modal fade" tabindex="-1" role="form" aria-labelledby="rateArticle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                                <div class="modal-header">
+                                                        <h5>Choose your rating</h5>
+                                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="close">
+                                                                <span aria-hidden="true"></span>
+                                                        </button>
+                                                </div>
+
+                                                <form action="<?= BASE_URL . "rate/" . $id ?>" method="post">
+                                                        <input type="hidden" name="id" value="<?= $id ?>" />
+                                                        <input type="hidden" name="rating" value="<?= (float)$rating ?>" />
+                                                        <input type="hidden" name="numberOfRatings" value="<?= $numberOfRatings ?>" />
+                                                        
+                                                        <div class="modal-body">
+                                                            <p>
+                                                                <label class="form-label">Choose a rating between 1 and 5</label><br>
+                                                                <select name="newRating">
+                                                                    <option value="1">1</option>
+                                                                    <option value="2">2</option>
+                                                                    <option value="3">3</option>
+                                                                    <option value="4">4</option>
+                                                                    <option value="5">5</option>
+                                                                </select>
+                                                            </p>
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                                        </div>
+                                                </form>
+                                        </div>
+                                </div>
+                            </div>
+                    <?php endif; ?>
                     
                     <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Seller'): ?>
                            <p>This article is
