@@ -75,53 +75,72 @@ class OrdersRESTController {
         }
     }
 
-    public static function add() {
-            $idCustomer = $_SESSION['user_id'];
+    public static function add($userId) {
+        $rawData = file_get_contents('php://input');
 
-            try {
-                    $cartGroupedBySeller = [];
-                    foreach ($_SESSION['cart'] as $articleId => $item) {
-                            $cartGroupedBySeller[$item['idSeller']][] = ['id' => $item['id'], 'name' => $item['name'], 'artist' => $item['artist'], 'price' => $item['price'], 'quantity' => $item['quantity']];
-                    }
+        // Decode the raw JSON data into an associative array
+        $cartItems = json_decode($rawData, true);
 
-                    $orderIds = [];
-                    foreach ($cartGroupedBySeller as $idSeller => $articles) {
-                            $totalPrice = 0;
-                            foreach ($articles as $article) {
-                                $totalPrice += $article['price'] * $article['quantity'];
-                            }
+        // Check for JSON decoding errors
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            die('Invalid JSON data');
+        }
 
-                            $orderId = WooHooDB::insertOrder([
-                                "price" => $totalPrice,
-                                "idCustomer" => $idCustomer,
-                                "idSeller" => $idSeller
-                            ]);
-                            $orderIds[] = $orderId;
+        try {
+            $cartGroupedBySeller = [];
+            foreach ($cartItems as $item) {
+                $articleId = $item['articleId'];
+                $quantity = $item['quantity'];
 
-                            foreach ($articles as $article) {
-                                for ($i = 0; $i < $article['quantity']; $i++) {
-                                    WooHooDB::insertOrderArticle([
-                                            "idOrder" => $orderId,
-                                            "idArticle" => $article['id'],
-                                    ]);
-                                }
-                            }
-                    }
+                // Fetch the article record by articleId
+                $article = WooHooDB::getRecord(['id' => $articleId]);
 
-                    unset($_SESSION['cart']);
-                    $_SESSION['cart'] = [];
+                // Group items by seller
+                $cartGroupedBySeller[$article['idSeller']][] = [
+                    'id' => $articleId,
+                    'name' => $article['name'],
+                    'artist' => $article['artist'],
+                    'price' => $article['price'],
+                    'quantity' => $quantity
+                ];
 
-                    echo ViewHelper::redirect(BASE_URL . 'orders/' . $idCustomer);
-            } catch (Exception $e) {
-                    echo ViewHelper::renderJSON("An error occurred: " . $e->getMessage(), 500);
+                echo "Article ID: $articleId, Quantity: $quantity\n";
             }
-    }
 
-    public static function edit($id) {
-            $data = filter_input_array(INPUT_POST);
+            $orderIds = [];
+            foreach ($cartGroupedBySeller as $idSeller => $articles) {
+                $totalPrice = 0;
+                foreach ($articles as $article) {
+                    $totalPrice += $article['price'] * $article['quantity'];
+                }
 
-            $data["id"] = $id;
-            WooHooDB::updateOrder($data);
-            echo ViewHelper::redirect(BASE_URL . 'orders/' . $_SESSION['user_id']);
+                // Insert the order and get the order ID
+                $orderId = WooHooDB::insertOrder([
+                    "price" => $totalPrice,
+                    "idCustomer" => $userId,
+                    "idSeller" => $idSeller
+                ]);
+                $orderIds[] = $orderId;
+
+                // Insert each article into the order
+                foreach ($articles as $article) {
+                    for ($i = 0; $i < $article['quantity']; $i++) {
+                        WooHooDB::insertOrderArticle([
+                            "idOrder" => $orderId,
+                            "idArticle" => $article['id'],
+                        ]);
+                    }
+                }
+            }
+
+            // Respond based on whether any orders were created
+            if (empty($cartGroupedBySeller)) {
+                echo ViewHelper::renderJSON("Order not made", 300);
+            } else {
+                echo ViewHelper::renderJSON("Order sent", 200);
+            }
+        } catch (Exception $e) {
+            echo ViewHelper::renderJSON("Order not made", 400);
+        }
     }
 }
