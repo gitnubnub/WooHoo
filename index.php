@@ -36,11 +36,21 @@ $urls = [
 				break;
 		}
 	},
+        "/^rate\/(\d+)$/" => function ($method, $id) {
+		RecordsController::rate($id);
+	},
         "/^records\/toggle\/(\d+)$/" => function ($method, $id) {
             RecordsController::delete($id);
 	},
-        "/^search$/" => function () {
-            echo ViewHelper::render("view/search.php");
+        "/^search$/" => function ($method) {
+            switch ($method) {
+                    case "POST":
+                            RecordsController::search();
+                            break;
+                    default:
+                            echo ViewHelper::render("view/search.php");
+                            break;
+		}
         },
 	"/^cart$/" => function ($method) {
             if (isset($_SESSION['user_id'])) {

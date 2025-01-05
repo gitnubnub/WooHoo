@@ -15,6 +15,13 @@ class RecordsController {
 		echo ViewHelper::render("view/home.php", ["records" => WooHooDB::getAllRecords()]);
             }
 	}
+        
+        public static function search() {
+            $data = filter_input_array(INPUT_POST);
+            $searchTerm = filter_input(INPUT_POST, 'searchTerm', FILTER_SANITIZE_SPECIAL_CHARS);
+            
+            echo ViewHelper::render("view/search.php", ["results" => WooHooDB::searchRecords($searchTerm)]);
+        }
 
 	public static function add() {
 		$idSeller = $_SESSION['user_id'];
@@ -36,8 +43,18 @@ class RecordsController {
 			ViewHelper::redirect(BASE_URL . "records/" . $id);
 		}
 	}
+        
+        public static function rate($id) {
+            $data = filter_input_array(INPUT_POST);
+            $data['id'] = $id;
+            
+            $data['rating'] = round(($data['numberOfRatings'] * (float)$data['rating'] + $data['newRating']) / ($data['numberOfRatings'] + 1), 2);
+            $data['numberOfRatings']++;
+            WooHooDB::updateRating($data);
+            ViewHelper::redirect(BASE_URL . "records/" . $id);
+        }
 
-	public static function delete($id) {
+        public static function delete($id) {
             $data = filter_input_array(INPUT_POST);
             $data["id"] = $id;
             $data["isActive"] = isset($data["isActive"]) && $data["isActive"] == true ? 0 : 1;

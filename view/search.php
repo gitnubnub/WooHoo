@@ -59,16 +59,49 @@
 		</nav>
 		
 		<div id="content">
-			<div class="input-group">
-				<input type="search" class="form-control" placeholder="Search for an album or artist" />
+                    <form action="<?= BASE_URL . "search" ?>" method="post">
+			<div class="input-group">                            
+				<input type="search" class="form-control" name="searchTerm" placeholder="Search for an album or artist" />
 				<div class="input-group-append">
-					<button class="btn btn-primary" type="button">
+					<button class="btn btn-primary" type="submit">
 						<i class="fa-solid fa-magnifying-glass"></i>
 					</button>
-				</div>
+				</div>                            
 			</div>
-		</div>
+                    </form>
+                    
+                        <?php if (isset($results)): ?>
+                            <?php foreach ($results as $article): ?>
+                                        <div class="card">
+                                                <div class="article-text">
+                                                        <a id="detailed" href="<?= BASE_URL . "records/" . $article["id"] ?>">
+                                                                <h4><?= $article["name"] ?></h4>
+                                                        </a>
+                                                        <h5><?= $article["artist"] ?></h5>
+                                                        <p><?= $article["price"] ?> €</p>
+                                                </div>
 
+                                            <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Customer'): ?>
+                                                <div class="card-footer">
+                                                        <form action="<?= BASE_URL . "cart" ?>" method="post" style="display: inline;">
+                                                            <input type="hidden" name="id" value="<?= $article['id'] ?>">
+                                                            <input type="hidden" name="name" value="<?= htmlspecialchars($article['name'], ENT_QUOTES) ?>">
+                                                            <input type="hidden" name="artist" value="<?= htmlspecialchars($article['artist'], ENT_QUOTES) ?>">
+                                                            <input type="hidden" name="price" value="<?= $article['price'] ?>">
+                                                            <input type="hidden" name="idSeller" value="<?= $article['idSeller'] ?>">
+                                                            <button id="cartbtn" type="submit" class="btn btn-primary">
+                                                                <i class="fa-solid fa-cart-shopping"></i>
+                                                            </button>
+                                                        </form>
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p style="margin: 10px">No results for the given search term.
+                        <?php endif; ?>
+                </div>
+		
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 	</body>
 </html>
