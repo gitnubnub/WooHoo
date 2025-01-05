@@ -169,7 +169,8 @@ $urls = [
         "/^api\/orders\/(\d+)$/"=> function ($method, $userId) {
             switch ($method) {
                 case "POST":
-                    OrdersRESTController::add();
+                    //echo ViewHelper::renderJSON("Invalid email or password.", 400);
+                    OrdersRESTController::add($userId);
                     break;
                 default:
                     OrdersRESTController::index($userId);

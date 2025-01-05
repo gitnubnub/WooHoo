@@ -72,7 +72,9 @@ class OrdersController {
 		try {
 			$cartGroupedBySeller = [];
 			foreach ($_SESSION['cart'] as $articleId => $item) {
-				$cartGroupedBySeller[$item['idSeller']][] = ['id' => $item['id'], 'name' => $item['name'], 'artist' => $item['artist'], 'price' => $item['price'], 'quantity' => $item['quantity']];
+				$cartGroupedBySeller[$item['idSeller']][] = ['id' => $item['id'],
+                                    'name' => $item['name'], 'artist' => $item['artist'],
+                                    'price' => $item['price'], 'quantity' => $item['quantity']];
 			}
 	
 			$orderIds = [];
