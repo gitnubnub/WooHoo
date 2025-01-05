@@ -9,3 +9,5 @@ UPORABNIŠKA IMENA IN GESLA VNAPREJ USTVARJENIH UPORABNIKOV
 - stranka: 'timi@siol.net', 'kanauc'
 
 Geslo za vse v povezavi s certifikatno agencijo je 'ep'.
+
+Za delovanje CAPTCHA (prikaz slike) je potrebno v terminalu naložiti php-gd z ukazom: ```sudo apt install php-gd```
