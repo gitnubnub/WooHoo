@@ -154,7 +154,7 @@ class ProfileController {
 			'name' => FILTER_SANITIZE_SPECIAL_CHARS,
 			'surname' => FILTER_SANITIZE_SPECIAL_CHARS,
 			'address' => FILTER_SANITIZE_SPECIAL_CHARS,
-			'addressNumber' => FILTER_VALIDATE_INT,
+			'addressNumber' => FILTER_SANITIZE_SPECIAL_CHARS,
 			'postalCode'=> [
 				'filter' => FILTER_VALIDATE_INT,
 				'options' => [

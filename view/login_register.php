@@ -101,7 +101,7 @@
 
 								<label class="form-label">Address</label><br>
 								<input type="text" class="form-control" name="address" value="<?= isset($address) ? $address : '' ?>" placeholder="Street name" required />
-								<input type="number" class="form-control" name="addressNumber" value="<?= isset($addressNumber) ? $addressNumber : '' ?>" placeholder="House number"required />
+								<input type="text" class="form-control" name="addressNumber" value="<?= isset($addressNumber) ? $addressNumber : '' ?>" placeholder="House number"required />
 								<input type="number" class="form-control" name="postalCode" value="<?= isset($postalCode) ? $postalCode : '' ?>" placeholder="Postcode" required /><br>
                                                                                                                                 
                                                                 <label for="captcha">Please enter the CAPTCHA text</label><br>

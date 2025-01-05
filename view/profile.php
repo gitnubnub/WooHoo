@@ -99,7 +99,7 @@
                                                                         </p>
                                                                         <p>
                                                                             <input type="text" class="form-control" name="address" value="<?= $address ?>" placeholder="Street name" required />
-                                                                            <input type="number" class="form-control" name="addressNumber" value="<?= $addressNumber ?>" placeholder="House number"required />
+                                                                            <input type="text" class="form-control" name="addressNumber" value="<?= $addressNumber ?>" placeholder="House number"required />
                                                                             <input type="number" class="form-control" name="postalCode" value="<?= $postalCode ?>" placeholder="Postcode" required />
 									</p>
 								</div>
