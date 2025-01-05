@@ -12,7 +12,7 @@ class ProfileRESTController {
 
         $user = WooHooDB::getUserByEmail(['email' => $email]);
 
-        if ($user) {
+        if ($user && $user['isActive'] == true) {
             $hashedPassword = $user['hash'];
             $salt = $user['salt'];
 
