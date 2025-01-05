@@ -103,6 +103,10 @@
 								<input type="text" class="form-control" name="address" value="<?= isset($address) ? $address : '' ?>" placeholder="Street name" required />
 								<input type="number" class="form-control" name="addressNumber" value="<?= isset($addressNumber) ? $addressNumber : '' ?>" placeholder="House number"required />
 								<input type="number" class="form-control" name="postalCode" value="<?= isset($postalCode) ? $postalCode : '' ?>" placeholder="Postcode" required /><br>
+                                                                                                                                
+                                                                <label for="captcha">Please enter the CAPTCHA text</label><br>
+                                                                <img src="captcha.php"><br>
+                                                                <input type="text" name="captcha" value="<?= isset($captcha) ? $captcha : '' ?>" required />
 							</div>
 							
 							<div class="card-footer">
@@ -115,5 +119,6 @@
 		</div>
 
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
 	</body>
 </html>
